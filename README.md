@@ -18,20 +18,43 @@ $$
 #### $\ell_{1}$-norm
  Relative error $\|x_{k}-x_{k-1}\|$          |  Objective function value $\Phi(x_{k}) - \Phi(x^\star)$
 :-------------------------:|:-------------------------:
-![l1-norm](codes/inverse-problem/cmp_fista_ek_lasso.png)  |  ![l1-norm](codes/inverse-problem/cmp_fista_phik_lasso.png)
+![ ](codes/inverse-problem/cmp_fista_ek_lasso.png)  |  ![ ](codes/inverse-problem/cmp_fista_phik_lasso.png)
 
 
 #### $\ell_{1,2}$-norm
  Relative error $\|x_{k}-x_{k-1}\|$          |  Objective function value $\Phi(x_{k}) - \Phi(x^\star)$
 :-------------------------:|:-------------------------:
-![l12-norm](codes/inverse-problem/cmp_fista_ek_glasso.png)  |  ![l1-norm](codes/inverse-problem/cmp_fista_phik_glasso.png)
+![ ](codes/inverse-problem/cmp_fista_ek_glasso.png)  |  ![ ](codes/inverse-problem/cmp_fista_phik_glasso.png)
 
 
 #### $\ell_{\infty}$-norm
  Relative error $\|x_{k}-x_{k-1}\|$          |  Objective function value $\Phi(x_{k}) - \Phi(x^\star)$
 :-------------------------:|:-------------------------:
-![linfty-norm](codes/inverse-problem/cmp_fista_ek_infty.png)  |  ![l1-norm](codes/inverse-problem/cmp_fista_phik_infty.png)
+![ ](codes/inverse-problem/cmp_fista_ek_infty.png)  |  ![ ](codes/inverse-problem/cmp_fista_phik_infty.png)
 
 
+## Total variation based image deblur
+
+##### The codes only run under MacOS
+
+ Original image    |   Blurred image  |   Recovered image          |  Performance comparison
+:-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:
+![ ](codes/tv-deblur/original-img.png)  |  ![ ](codes/tv-deblur/original-blur.png)  |  ![ ](codes/tv-deblur/original-deblur.png)  |  ![ ](codes/tv-deblur/cmp_fista_tvdeblur.png)
+
+
+## Principle component pursuit
+
+#### Matrix example
+
+ Mixture matrix    |   Sparse component  |   Low-rank component          |  Performance comparison
+:-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:
+![ ](codes/pcp/observation.png)  |  ![ ](codes/pcp/sparse-mtx.png)  |  ![ ](codes/pcp/lowrank-mtx.png)  |  ![ ](codes/pcp/cmp_fista_pcp_mtx.png)
+
+
+#### Video example
+
+ Original frame    |   Foreground  |   Background          |  Performance comparison
+:-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:
+![ ](codes/pcp/original-frame.png)  |  ![ ](codes/pcp/sparse-component.png)  |  ![ ](codes/pcp/lowrank-component.png)  |  ![ ](codes/pcp/cmp_fista_pcp.png)
 
 Copyright (c) 2018 Jingwei Liang
