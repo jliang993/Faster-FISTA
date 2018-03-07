@@ -16,19 +16,19 @@ $$
 $$
 
 #### $\ell_{1}$-norm
- ( $\|x_{k}-x_{k-1}\|$ )           |  ( $\Phi(x_{k}) - \Phi(x^\star)$ )
+ Relative error $\|x_{k}-x_{k-1}\|$          |  Objective function value $\Phi(x_{k}) - \Phi(x^\star)$
 :-------------------------:|:-------------------------:
 ![l1-norm](codes/inverse-problem/cmp_fista_ek_lasso.png)  |  ![l1-norm](codes/inverse-problem/cmp_fista_phik_lasso.png)
 
 
 #### $\ell_{1,2}$-norm
- ( $\|x_{k}-x_{k-1}\|$ )           |  ( $\Phi(x_{k}) - \Phi(x^\star)$ )
+ Relative error $\|x_{k}-x_{k-1}\|$          |  Objective function value $\Phi(x_{k}) - \Phi(x^\star)$
 :-------------------------:|:-------------------------:
 ![l12-norm](codes/inverse-problem/cmp_fista_ek_glasso.png)  |  ![l1-norm](codes/inverse-problem/cmp_fista_phik_glasso.png)
 
 
 #### $\ell_{\infty}$-norm
- ( $\|x_{k}-x_{k-1}\|$ )           |  ( $\Phi(x_{k}) - \Phi(x^\star)$ )
+ Relative error $\|x_{k}-x_{k-1}\|$          |  Objective function value $\Phi(x_{k}) - \Phi(x^\star)$
 :-------------------------:|:-------------------------:
 ![linfty-norm](codes/inverse-problem/cmp_fista_ek_infty.png)  |  ![l1-norm](codes/inverse-problem/cmp_fista_phik_infty.png)
 
