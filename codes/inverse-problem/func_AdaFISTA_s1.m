@@ -12,7 +12,7 @@ n = para.n;
 % f = para.f;
 
 A = para.A;
-alpha = 0; %strong convexity
+% alpha = 0; %strong convexity
 
 gamma = 1 *beta;
 tau = mu*gamma;
@@ -31,8 +31,6 @@ y = x0;
 tol = 1e-10;
 maxits = 1e5;
 
-Ak = zeros(1, maxits);
-Tk = zeros(1, maxits);
 ek = zeros(1, maxits);
 phik = zeros(1, maxits);
 
@@ -51,7 +49,8 @@ while(its<maxits)
     
     if mod(its,w2)==0
         r = alpha_est(p,gamma, x, A, J);
-        % if t>4; t = t/2; end
+        % [t, 4*p/(4 - r)]
+        if r<4; if t >= 4*p/(4 - r); t = 4*p/(4 - r)/1.1; end; end
     end
     
     %%%%%%% stop?

@@ -7,6 +7,29 @@ Faster FISTA
 Jingwei Liang, Carola-Bibiane Schönlieb, Preprint 2018
 
 
+## Quadratic problem
+
+Consider solving the problem below
+$$
+\min_{x\in \mathbb{R}^n} ~ \frac{1}{2} \|Ax - f\|^2  ,
+$$
+where $A$ is the Laplacian operator
+$$
+A = 
+\begin{bmatrix}
+2 & -1 & & & & & &  \\
+-1 & 2 & -1 & & & & &  \\
+ & -1 & 2 & -1 & & & &  \\
+ & & & \dotsm \\
+ &  & & & -1 & 2 & -1 &  \\
+ & &  & & & -1 & 2 & -1  \\
+ & & &  & & & -1 & 2  \\
+\end{bmatrix}
+$$
+
+ Relative error $\|x_{k}-x_{k-1}\|$          |  Objective function value $\Phi(x_{k}) - \Phi(x^\star)$
+:-------------------------:|:-------------------------:
+![ ](codes/lse/cmp_lse_ek.png)  |  ![ ](codes/lse/cmp_lse_fk.png)
 
 ## Linear inverse problems
 

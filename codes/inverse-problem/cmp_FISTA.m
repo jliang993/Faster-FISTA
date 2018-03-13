@@ -3,13 +3,15 @@ close all
 clc
 %% problem set up
 J = 'lasso';
-J = 'glasso';
-J = 'infty';
+% J = 'glasso';
+% J = 'infty';
 
 [para, gradF,proxJ, objPhi] = problem_setup(J);
 
 para.tol = 1e-11;
 para.maxits = 1e5;
+
+outputType = 'png';
 %% Original FISTA-BT
 fprintf(sprintf('performing FISTA-BT...\n'));
 
@@ -39,6 +41,7 @@ q = 1/1e1;
 fprintf('\n');
 %% Adaptive-FISTA, AdaFISTA
 fprintf(sprintf('performing Ada-FISTA...\n'));
+r = 4;
 p = 1;
 q = p^2;
 
@@ -50,7 +53,6 @@ fprintf(sprintf('performing FISTA-CD...\n'));
 
 d = 2;
 [x_c1, its_c1, ek_c1, phik_c1] = func_FISTA_CD(para, gradF, proxJ, objPhi, J, d);
-% fprintf('\n');
 
 %
 d = 75;
@@ -66,8 +68,6 @@ q = 1;
 
 fprintf('\n');
 %% plot ||x_{k} - x_{k-1}||
-outputType = 'png';
-
 linewidth = 1;
 
 axesFontSize = 8;
@@ -110,6 +110,7 @@ ax.GridLineStyle = '--';
 
 % v = axis;
 axis([1 length(ek)+0 1e-10 1e2]);
+if strcmp(J, 'infty'); axis([1 length(ek)/3 1e-10 1e2]); end
 ytick = [1e-10, 1e-6, 1e-2, 1e2];
 set(gca, 'yTick', ytick);
 
@@ -140,7 +141,7 @@ if strcmp(outputType, 'png')
 else
     print(epsname, '-dpdf');
 end
-%% plot Phi(x_{k})
+%% plot Phi(x_{k}) - Phi(x*) 
 phisol = min(phik);
 
 linewidth = 1;
@@ -184,10 +185,11 @@ ax.GridLineStyle = '--';
 
 % v = axis;
 axis([1 length(phik)+0 1e-14 1e4]);
+if strcmp(J, 'infty'); axis([1 length(phik)/3 1e-14 1e2]); end
 ytick = [1e-12, 1e-8, 1e-4, 1e0, 1e4];
 set(gca, 'yTick', ytick);
 
-ylb = ylabel({'$\Phi(x_{k})$'}, 'FontSize', labelFontSize,...
+ylb = ylabel({'$\Phi(x_{k})-\Phi(x^\star)$'}, 'FontSize', labelFontSize,...
     'FontAngle', 'normal', 'Interpreter', 'latex');
 set(ylb, 'Units', 'Normalized', 'Position', [-0.1, 0.5, 0]);
 xlb = xlabel({'\vspace{-1.0mm}';'$k$'}, 'FontSize', labelFontSize,...
