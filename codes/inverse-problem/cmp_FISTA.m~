@@ -3,8 +3,8 @@ close all
 clc
 %% problem set up
 J = 'lasso';
-J = 'glasso';
-J = 'infty';
+% J = 'glasso';
+% J = 'infty';
 
 [para, gradF,proxJ, objPhi] = problem_setup(J);
 
@@ -59,15 +59,13 @@ fprintf('\n\n');
 %% Restarting FISTA
 r = 4;
 
-p = 1;
-q = 1;
+p = 0.99;
+q = p^2;
 
 [x_r, its_r, ek_r, phik_r] = func_FISTA_Restart(para, gradF, proxJ, objPhi, J, p,q,r);
 
 fprintf('\n');
 %% plot ||x_{k} - x_{k-1}||
-outputType = 'png';
-
 linewidth = 1;
 
 axesFontSize = 8;
@@ -134,12 +132,8 @@ pos_ = get(lg, 'Position');
 legend('boxoff');
 
 
-epsname = sprintf('cmp_fista_ek_%s.%s', J, outputType);
-if strcmp(outputType, 'png')
-    print(epsname, '-dpng');
-else
-    print(epsname, '-dpdf');
-end
+epsname = sprintf('cmp_fista_ek_%s.png', J);
+print(epsname, '-dpng');
 %% plot Phi(x_{k})
 phisol = min(phik);
 
@@ -208,9 +202,5 @@ pos_ = get(lg, 'Position');
 legend('boxoff');
 
 
-epsname = sprintf('cmp_fista_phik_%s.%s', J, outputType);
-if strcmp(outputType, 'png')
-    print(epsname, '-dpng');
-else
-    print(epsname, '-dpdf');
-end
+epsname = sprintf('cmp_fista_phik_%s.png', J);
+print(epsname, '-dpng');
