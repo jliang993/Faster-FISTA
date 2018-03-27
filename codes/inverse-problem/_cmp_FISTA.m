@@ -4,7 +4,7 @@ clc
 %% problem set up
 J = 'lasso';
 % J = 'glasso';
-J = 'infty';
+% J = 'infty';
 
 [para, gradF,proxJ, objPhi] = problem_setup(J);
 
@@ -65,7 +65,7 @@ hold on;
 semilogy(ek_ar, 'k');
 grid on;
 %%
-[x_ab, its_ab, ek_ab, phik_ab, r_ab, Rk_b, Vk_b,Wk_b] =...
+[x_ab, its_ab, ek_ab, phik_ab, Ak, r_ab, Rk_b, Vk_b,Wk_b] =...
     func_AdaFISTA_sR_Bisection(para, gradF, proxJ, objPhi, J, p,q,r);
 
 fprintf('\n');
@@ -80,6 +80,14 @@ semilogy(ek_a, 'r');
 hold on;
 semilogy(ek_ar, 'k');
 semilogy(ek_ab, 'm');
+grid on;
+
+figure(104), clf;
+
+semilogy(phik_a-min(phik), 'r');
+hold on;
+semilogy(phik_ar-min(phik), 'k');
+semilogy(phik_ab-min(phik), 'm');
 grid on;
 %% FISTA-AC
 fprintf(sprintf('performing FISTA-CD...\n'));
@@ -103,7 +111,7 @@ q = 1;
 
 fprintf('\n');
 
-[its_a, its_ar, its_ab, its
+[its_a, its_ar, its_ab, its_r]
 %% plot ||x_{k} - x_{k-1}||
 linewidth = 1;
 

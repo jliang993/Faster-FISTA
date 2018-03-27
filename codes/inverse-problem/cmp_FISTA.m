@@ -42,10 +42,18 @@ fprintf('\n');
 %% Adaptive-FISTA, AdaFISTA
 fprintf(sprintf('performing Ada-FISTA...\n'));
 r = 4;
-p = 1;
+p = 1/1;
 q = p^2;
 
-[x_a, its_a, ek_a, phik_a] = func_AdaFISTA_s1(para, gradF, proxJ, objPhi, J, p,q,r);
+[x_a, its_a, ek_a, phik_a, r_a, Rk_a, Vk_a] = func_AdaFISTA_s1(para, gradF, proxJ, objPhi, J, p,q,r);
+
+fprintf('\n');
+%% Adaptive + Restarting
+r = 4;
+p = 1/2;
+q = p^2;
+
+[x_ar, its_ar, ek_ar, phik_ar, r_ar, Rk, Vk,Wk] = func_AdaFISTA_sR(para, gradF, proxJ, objPhi, J, p,q,r);
 
 fprintf('\n');
 %% FISTA-AC
@@ -59,6 +67,8 @@ d = 75;
 [x_c2, its_c2, ek_c2, phik_c2] = func_FISTA_CD(para, gradF, proxJ, objPhi, J, d);
 fprintf('\n\n');
 %% Restarting FISTA
+fprintf(sprintf('performing restarting FISTA...\n'));
+
 r = 4;
 
 p = 1;
@@ -67,6 +77,8 @@ q = 1;
 [x_r, its_r, ek_r, phik_r] = func_FISTA_Restart(para, gradF, proxJ, objPhi, J, p,q,r);
 
 fprintf('\n');
+
+[its_a, its_ar, its_r]
 %% plot ||x_{k} - x_{k-1}||
 linewidth = 1;
 
@@ -94,7 +106,7 @@ blue2 = [0.0,0.0,0.85];
 p2 = semilogy(ek_m2, 'Color',blue2, 'LineWidth',linewidth);
 
 pas1 = semilogy(ek_a, 'Color',[0.0,0.5,0.0], 'LineWidth',linewidth);
-
+pasr = semilogy(ek_ar, 'Color',[0.99,0.01,0.99], 'LineWidth',linewidth);
 
 pr = semilogy(ek_r, '-.', 'Color',[0.33,0.33,0.33], 'LineWidth',linewidth);
 
@@ -109,8 +121,8 @@ ax = gca;
 ax.GridLineStyle = '--';
 
 % v = axis;
-axis([1 length(ek)+0 1e-10 1e2]);
-if strcmp(J, 'infty'); axis([1 length(ek)/3 1e-10 1e2]); end
+axis([1 length(ek)/1 1e-10 1e2]);
+if strcmp(J, 'infty'); axis([1 length(ek)/6 1e-10 1e2]); end
 ytick = [1e-10, 1e-6, 1e-2, 1e2];
 set(gca, 'yTick', ytick);
 
@@ -121,10 +133,10 @@ xlb = xlabel({'\vspace{-1.0mm}';'$k$'}, 'FontSize', labelFontSize,...
     'FontAngle', 'normal', 'Interpreter', 'latex');
 set(xlb, 'Units', 'Normalized', 'Position', [1/2, -0.055, 0]);
 
-lg = legend([p1, p2, p3,p4, pas1, pr], 'FISTA-BT',...
+lg = legend([p1, p2, p3,p4, pas1,pasr, pr], 'FISTA-BT',...
     'FISTA-Mod, $p = \frac{1}{50}, q = \frac{1}{10}$',...
     'FISTA-CD, $d = 2$', 'FISTA-CD, $d = 75$',...
-    'Ada-FISTA, $p=1, q=1$',...
+    'Ada-FISTA, $p=1, q=1$', 'Ada-FISTA+Restart, $p=\frac{1}{2}, q=1$',...
     'Restarting FISTA');
 set(lg,'FontSize', legendFontSize);
 set(lg, 'Interpreter', 'latex');
@@ -170,6 +182,7 @@ blue2 = [0.0,0.0,0.85];
 p2 = semilogy(phik_m2-phisol, 'Color',blue2, 'LineWidth',linewidth);
 
 pas1 = semilogy(phik_a-phisol, 'Color',[0.0,0.5,0.0], 'LineWidth',linewidth);
+pasr = semilogy(phik_ar-phisol, 'Color',[0.99,0.01,0.99], 'LineWidth',linewidth);
 
 pr = semilogy(phik_r-phisol, '-.', 'Color',[0.33,0.33,0.33], 'LineWidth',linewidth);
 
@@ -184,8 +197,8 @@ ax = gca;
 ax.GridLineStyle = '--';
 
 % v = axis;
-axis([1 length(phik)+0 1e-14 1e4]);
-if strcmp(J, 'infty'); axis([1 length(phik)/3 1e-14 1e2]); end
+axis([1 length(phik)/1 1e-14 1e4]);
+if strcmp(J, 'infty'); axis([1 length(phik)/6 1e-14 1e2]); end
 ytick = [1e-12, 1e-8, 1e-4, 1e0, 1e4];
 set(gca, 'yTick', ytick);
 
@@ -196,10 +209,10 @@ xlb = xlabel({'\vspace{-1.0mm}';'$k$'}, 'FontSize', labelFontSize,...
     'FontAngle', 'normal', 'Interpreter', 'latex');
 set(xlb, 'Units', 'Normalized', 'Position', [1/2, -0.055, 0]);
 
-lg = legend([p1, p2, p3,p4, pas1, pr], 'FISTA-BT',...
+lg = legend([p1, p2, p3,p4, pas1,pasr, pr], 'FISTA-BT',...
     'FISTA-Mod, $p = \frac{1}{50}, q = \frac{1}{10}$',...
     'FISTA-CD, $d = 2$', 'FISTA-CD, $d = 75$',...
-    'Ada-FISTA, $p=1, q=1$',...
+    'Ada-FISTA, $p=1, q=1$', 'Ada-FISTA+Restart, $p=\frac{1}{2}, q=1$',...
     'Restarting FISTA');
 set(lg,'FontSize', legendFontSize);
 set(lg, 'Interpreter', 'latex');

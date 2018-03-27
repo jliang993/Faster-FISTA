@@ -48,11 +48,31 @@ q = 1/1;
 
 [xs2,xl2, its2, ek2] = func_FISTA_Mod(para, GradF, ProxJ, p,q,r);
 
-%%
+% %
 p = 1/30;
 q = 1/10;
 
 [xs3,xl3, its3, ek3] = func_FISTA_Mod(para, GradF, ProxJ, p,q,r);
+
+fprintf('\n');
+%% Adaptive-FISTA
+fprintf(sprintf('performing restarting Ada-FISTA...\n'));
+r = 4;
+p = 1/1.5;
+q = p^2;
+
+[xsar,xlar, its_ar, ek_ar] = func_AdaFISTA_sR(para, GradF, ProxJ, p,q,r);
+
+fprintf('\n');
+%% Restarting FISTA
+fprintf(sprintf('performing restarting FISTA...\n'));
+
+r = 4;
+
+p = 1;
+q = 1;
+
+[xsr,xlr, its_r, ek_r] = func_FISTA_Restart(para, GradF, ProxJ, p,q,r);
 
 fprintf('\n');
 %% plot
@@ -81,6 +101,9 @@ p2 = semilogy(ek2, 'Color',blue1, 'LineWidth',linewidth);
 blue2 = [0.9,0.0,0.0];
 p3 = semilogy(ek3, 'Color',blue2, 'LineWidth',linewidth);
 
+pasr = semilogy(ek_ar, 'Color',[0.99,0.01,0.99], 'LineWidth',linewidth);
+pr = semilogy(ek_r, '-.', 'Color',[0.33,0.33,0.33], 'LineWidth',linewidth);
+
 grid on;
 ax = gca;
 ax.GridLineStyle = '--';
@@ -99,13 +122,15 @@ set(xlb, 'Units', 'Normalized', 'Position', [1/2, -0.055, 0]);
 
 lg = legend([p1, p2, p3], 'FISTA-BT',...
     'FISTA-Mod, $p = \frac{1}{5}, q = {1}$',...
-    'FISTA-Mod, $p = \frac{1}{30}, q = \frac{1}{10}$');
+    'FISTA-Mod, $p = \frac{1}{30}, q = \frac{1}{10}$',...
+    'Ada-FISTA+Restart, $p=\frac{1}{1.5}, q=1$',...
+    'Restarting FISTA');
 set(lg,'FontSize', 10);
 set(lg, 'Interpreter', 'latex');
 %
 pos = get(lg, 'Position');
-set(lg, 'Position', [pos(1)-0.125, pos(2)-0.075, pos(3:4)]);
-pos_ = get(lg, 'Position');
+% set(lg, 'Position', [pos(1)-0.125, pos(2)-0.075, pos(3:4)]);
+% pos_ = get(lg, 'Position');
 legend('boxoff');
 
 

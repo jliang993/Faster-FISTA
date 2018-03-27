@@ -11,6 +11,7 @@ switch J
     case 'lasso'
         k = 128;
         n = 2048; % length of signal
+        % k = 16; n = 256;
         m = oversampling*k; % # of measurements
         
         % original x
@@ -62,6 +63,8 @@ switch J
     case 'infty'
         n = 1024; % length of signal
         m = 1020; % # of measurements
+        
+        % n = 256; m = 252;
         
         % original x
         xob = randn(n,1);

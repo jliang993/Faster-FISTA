@@ -24,8 +24,10 @@ A =
  &  & & & -1 & 2 & -1 &  \\
  & &  & & & -1 & 2 & -1  \\
  & & &  & & & -1 & 2  \\
-\end{bmatrix}
+\end{bmatrix} .
 $$
+
+We set $n = 201$.
 
  Relative error $\|x_{k}-x_{k-1}\|$          |  Objective function value $\Phi(x_{k}) - \Phi(x^\star)$
 :-------------------------:|:-------------------------:

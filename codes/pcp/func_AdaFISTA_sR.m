@@ -1,4 +1,4 @@
-function [xs,xl, its, ek] = func_FISTA_Mod(para, GradF, ProxJ, p,q,r)
+function [xs,xl, its, ek] = func_AdaFISTA_sR(para, GradF, ProxJ, p,q,r)
 itsprint(sprintf('        step %08d: norm(ek) = %.3e', 1,1), 1);
 
 % parameter initialization
@@ -24,6 +24,7 @@ its = 1;
 ToL = 1e-14;
 
 t = 1;
+first = 1;
 
 x = x0;
 y = x0;
@@ -31,12 +32,44 @@ y = x0;
 while(its<maxits)
     
     x_old = x;
+    y_old = y;
+    
     x = FBS(y, tau);
     
     t_old = t;
     t = (p + sqrt(q+r*t_old^2)) /2;
     a = (t_old-1) /t;
     y = x + a*(x-x_old);
+    
+    
+    %%% update r_k
+    vk = (y_old(:)-x(:))'*(x(:)-x_old(:));
+    if vk >= 0
+        
+        if first
+            if its>1e4
+                theta = 0.999999;
+            elseif its>1e3
+                theta = 0.99999;
+            elseif its>5e2
+                theta = 0.9995;
+            elseif its>1e2
+                theta = 0.995;
+            elseif its>50
+                theta = 0.985;
+            else
+                theta = 0.95;
+            end
+            
+            first = 0;
+        end
+        
+        r = r * theta;
+        if t >= 4*p/(4 - r)
+            t = 4*p/(4 - r)/1;
+            y = x;
+        end
+    end
     
     %%% stop?
     normE = norm(x(:)-x_old(:), 'fro');

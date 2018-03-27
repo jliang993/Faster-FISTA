@@ -45,6 +45,27 @@ q = 1/10;
 [x3, its3, ek3] = func_FISTA_Mod(f,h, mu, p,q,r);
 
 fprintf('\n');
+%% Adaptive + Restarting
+fprintf(sprintf('performing restarting AdaFISTA...\n'));
+
+r = 4;
+p = 1/2;
+q = p^2;
+
+[x_ar, its_ar, ek_ar] = func_AdaFISTA_sR(f,h, mu, p,q,r);
+
+fprintf('\n');
+%% Restarting FISTA
+fprintf(sprintf('performing restarting FISTA...\n'));
+
+r = 4;
+
+p = 1;
+q = 1;
+
+[x_r, its_r, ek_r] = func_FISTA_Restart(f,h, mu, p,q,r);
+
+fprintf('\n');
 %% plot
 linewidth = 1;
 
@@ -71,12 +92,16 @@ p2 = semilogy(ek2, 'Color',blue1, 'LineWidth',linewidth);
 blue2 = [0.9,0.0,0.0];
 p3 = semilogy(ek3, 'Color',blue2, 'LineWidth',linewidth);
 
+pasr = semilogy(ek_ar, 'Color',[0.99,0.01,0.99], 'LineWidth',linewidth);
+
+pr = semilogy(ek_r, '-.', 'Color',[0.33,0.33,0.33], 'LineWidth',linewidth);
+
 grid on;
 ax = gca;
 ax.GridLineStyle = '--';
 
 % v = axis;
-axis([1 length(ek1)+0 1e-10 1e2]);
+axis([1 length(ek1)/4 1e-10 1e2]);
 ytick = [1e-10, 1e-6, 1e-2, 1e2];
 set(gca, 'yTick', ytick);
 
@@ -87,10 +112,12 @@ xlb = xlabel({'\vspace{-1.0mm}';'$k$'}, 'FontSize', labelFontSize,...
     'FontAngle', 'normal', 'Interpreter', 'latex');
 set(xlb, 'Units', 'Normalized', 'Position', [1/2, -0.055, 0]);
 
-lg = legend([p1, p2, p3], 'FISTA-BT',...
+lg = legend([p1, p2, p3, pasr, pr], 'FISTA-BT',...
     'FISTA-Mod, $p = \frac{1}{5}, q = {1}$',...
-    'FISTA-Mod, $p = \frac{1}{30}, q = \frac{1}{10}$');
-set(lg,'FontSize', 10);
+    'FISTA-Mod, $p = \frac{1}{30}, q = \frac{1}{10}$',...
+    'Ada-FISTA+Restart, $p=\frac{1}{2}, q=1$',...
+    'Restarting FISTA');
+set(lg,'FontSize', legendFontSize);
 set(lg, 'Interpreter', 'latex');
 %
 pos = get(lg, 'Position');

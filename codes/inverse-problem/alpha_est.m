@@ -55,7 +55,8 @@ e = e(e>1e-4);
 
 alpha = min(e);
 
-r = 4*(1 - sqrt(alpha*gamma))^2/(1-alpha*gamma);
+asol = (1 - sqrt(alpha*gamma))^2/(1-alpha*gamma);
+r = 4*p*(asol - (p-1)/p);
 
 
 

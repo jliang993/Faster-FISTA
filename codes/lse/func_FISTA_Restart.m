@@ -1,4 +1,4 @@
-function [x, ek, fk, its] = func_AdaFISTA(p,q,r, para, GradF, ObjF)
+function [x, ek, fk, its] = func_FISTA_Restart(p,q,r, para, GradF, ObjF)
 
 itsprint(sprintf('      step %09d: norm(ek) = %.3e', 1,1), 1);
 
@@ -17,19 +17,26 @@ x0 = zeros(n, 1);
 x = x0;
 y = x0;
 
-t = 1e2;
+t = 1;
+first = 1;
 % t = 4*p/(4 - r);
 
 its = 1;
 while(its<maxits)
     
     x_old = x;
+    y_old = y;
+    
     x = y - gamma*GradF(y);
     
     t_old = t;
     t = (p + sqrt(q+r*t_old^2)) /2;
     a = (t_old-1) /t;
     y = x + a*(x - x_old);
+    
+    %%% update r_k
+    vk = (y_old(:)-x(:))'*(x(:)-x_old(:));
+    if vk >= 0; t = 1; end
     
     %%% stop?
     normE = norm(x-x_old, 'fro');
