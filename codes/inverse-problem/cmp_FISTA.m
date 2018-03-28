@@ -3,7 +3,7 @@ close all
 clc
 %% problem set up
 J = 'lasso';
-% J = 'glasso';
+J = 'glasso';
 % J = 'infty';
 
 [para, gradF,proxJ, objPhi] = problem_setup(J);
