@@ -2,7 +2,7 @@ clear all;
 close all;
 clc;
 %%
-n = 2e2 + 1;
+n = 4e1 + 1;
 
 A = 2*eye(n) - diag(ones(n-1,1), -1) - diag(ones(n-1,1), 1);
 
@@ -66,7 +66,7 @@ fprintf('\n');
 fprintf(sprintf('performing restarting AdaFISTA...\n'));
 
 r = 4;%*(1 - sqrt(alpha*gamma))^2/(1-alpha*gamma);
-p = 1/1.5;
+p = 1/1.618;
 q = p^2;
 
 [x4, ek4, fk4, its4] = func_AdaFISTA_sR(p,q,r, para, GradF, ObjF);
@@ -99,15 +99,15 @@ set(0,'DefaultAxesFontSize', axesFontSize);
 set(gcf,'paperunits','centimeters','paperposition',[-0.1 -0.0 output_size/resolution]);
 set(gcf,'papersize',output_size/resolution-[0.85 0.4]);
 
-p0e = semilogy(ek0, 'm', 'LineWidth',linewidth);
+p0e = semilogy(ek0, 'color',[0.75,0.0,0.0], 'LineWidth',linewidth);
 hold on,
 p1e = semilogy(ek1, 'r', 'LineWidth',linewidth);
 
-p2e = semilogy(ek2, 'b', 'LineWidth',linewidth);
-p3e = semilogy(ek3, 'k', 'LineWidth',linewidth);
+p2e = semilogy(ek2, 'color',[0.4,0.4,0.4], 'LineWidth',linewidth);
+p3e = semilogy(ek3, 'b', 'LineWidth',linewidth);
 
-p4e = semilogy(ek4, 'k-.', 'LineWidth',linewidth);
-p5e = semilogy(ek5, 'color',[0.1,0.6,0.1], 'LineWidth',linewidth);
+p4e = semilogy(ek4, 'color',[0.99,0.0,0.99], 'LineWidth',linewidth);
+p5e = semilogy(ek5, 'k-.', 'LineWidth',linewidth);
 
 uistack(p2e, 'bottom');
 
@@ -115,7 +115,7 @@ grid on;
 ax = gca;
 ax.GridLineStyle = '--';
 
-axis([1, length(ek2)/1, 1e-10, 1e2]);
+axis([1, length(ek2)/10, 1e-10, 1e2]);
 ytick = [1e-10, 1e-6, 1e-2, 1e2];
 set(gca, 'yTick', ytick);
 
@@ -130,7 +130,7 @@ set(xlb, 'Units', 'Normalized', 'Position', [1/2, -0.075, 0]);
 lg = legend([p0e, p1e, p2e, p3e, p4e, p5e], ...
     'Gradient Descent', 'Optimal Heavyball',...
     'FISTA-BT', 'Lazy FISTA-Mod, $p = \frac{1}{20}, q = \frac{1}{1}$',...
-    'Ada-FISTA+Restart, $p=\frac{1}{1.5}, q=p^2$',...
+    'Ada-FISTA+Restart, $p=\frac{1}{1.618}, q=p^2$',...
     'Restarting FISTA');
 set(lg,'FontSize', legendFontSize);
 set(lg, 'Interpreter', 'latex');
@@ -160,15 +160,17 @@ set(0,'DefaultAxesFontSize', axesFontSize);
 set(gcf,'paperunits','centimeters','paperposition',[-0.1 -0.0 output_size/resolution]);
 set(gcf,'papersize',output_size/resolution-[0.85 0.4]);
 
-p0e = semilogy(fk0-phistar, 'm', 'LineWidth',linewidth);
+p0e = semilogy(fk0-phistar, 'color',[0.75,0.0,0.0], 'LineWidth',linewidth);
 hold on,
 p1e = semilogy(fk1-phistar, 'r', 'LineWidth',linewidth);
 
-p2e = semilogy(fk2-phistar, 'b', 'LineWidth',linewidth);
-p3e = semilogy(fk3-phistar, 'k', 'LineWidth',linewidth);
+p2e = semilogy(fk2-phistar, 'color',[0.4,0.4,0.4], 'LineWidth',linewidth);
+p3e = semilogy(fk3-phistar, 'b', 'LineWidth',linewidth);
 
-p4e = semilogy(fk4-phistar, 'k-.', 'LineWidth',linewidth);
-p5e = semilogy(fk5-phistar, 'color',[0.1,0.6,0.1], 'LineWidth',linewidth);
+p4e = semilogy(fk4-phistar, 'color',[0.99,0.0,0.99], 'LineWidth',linewidth);
+p5e = semilogy(fk5-phistar, 'k-.', 'LineWidth',linewidth);
+
+
 
 uistack(p2e, 'bottom');
 
@@ -176,7 +178,7 @@ grid on;
 ax = gca;
 ax.GridLineStyle = '--';
 
-axis([1, length(ek2)/1, 1e-14, 1e2]);
+axis([1, length(ek2)/10, 1e-14, 1e2]);
 ytick = [1e-14, 1e-10, 1e-6, 1e-2, 1e2];
 set(gca, 'yTick', ytick);
 
@@ -191,7 +193,7 @@ set(xlb, 'Units', 'Normalized', 'Position', [1/2, -0.075, 0]);
 lg = legend([p0e, p1e, p2e, p3e, p4e, p5e], ...
     'Gradient Descent', 'Optimal Heavyball',...
     'FISTA-BT', 'Lazy FISTA-Mod, $p = \frac{1}{20}, q = \frac{1}{1}$',...
-    'Ada-FISTA+Restart, $p=\frac{1}{1.5}, q=p^2$',...
+    'Ada-FISTA+Restart, $p=\frac{1}{1.618}, q=p^2$',...
     'Restarting FISTA');
 set(lg,'FontSize', legendFontSize);
 set(lg, 'Interpreter', 'latex');
