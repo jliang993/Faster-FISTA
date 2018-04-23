@@ -48,24 +48,6 @@ q = p^2;
 [x_a, its_a, ek_a, phik_a, r_a, Rk_a, Vk_a] = func_AdaFISTA_s1(para, gradF, proxJ, objPhi, J, p,q,r);
 
 fprintf('\n');
-%% Adaptive + Restarting
-r = 4;
-p = 1/2;
-q = p^2;
-
-[x_ar, its_ar, ek_ar, phik_ar, r_ar, Rk, Vk,Wk] = func_AdaFISTA_sR(para, gradF, proxJ, objPhi, J, p,q,r);
-
-fprintf('\n');
-%% FISTA-AC
-fprintf(sprintf('performing FISTA-CD...\n'));
-
-d = 2;
-[x_c1, its_c1, ek_c1, phik_c1] = func_FISTA_CD(para, gradF, proxJ, objPhi, J, d);
-
-%
-d = 75;
-[x_c2, its_c2, ek_c2, phik_c2] = func_FISTA_CD(para, gradF, proxJ, objPhi, J, d);
-fprintf('\n\n');
 %% Restarting FISTA
 fprintf(sprintf('performing restarting FISTA...\n'));
 
@@ -77,8 +59,29 @@ q = 1;
 [x_r, its_r, ek_r, phik_r] = func_FISTA_Restart(para, gradF, proxJ, objPhi, J, p,q,r);
 
 fprintf('\n');
+%% Adaptive + Restarting
+fprintf(sprintf('performing RAda-FISTA...\n'));
+r = 4;
+p = 1.0/1.05;
+q = p^2;
+
+[x_ar, its_ar, ek_ar, phik_ar, r_ar, Rk, Vk,Wk] = func_AdaFISTA_sR(para, gradF, proxJ, objPhi, J, p,q,r);
+
+fprintf('\n');
 
 [its_a, its_ar, its_r]
+
+fprintf('\n');
+%% FISTA-AC
+fprintf(sprintf('performing FISTA-CD...\n'));
+
+d = 2;
+[x_c1, its_c1, ek_c1, phik_c1] = func_FISTA_CD(para, gradF, proxJ, objPhi, J, d);
+
+% %
+d = 75;
+[x_c2, its_c2, ek_c2, phik_c2] = func_FISTA_CD(para, gradF, proxJ, objPhi, J, d);
+fprintf('\n\n');
 %% plot ||x_{k} - x_{k-1}||
 linewidth = 1;
 
@@ -136,7 +139,7 @@ set(xlb, 'Units', 'Normalized', 'Position', [1/2, -0.055, 0]);
 lg = legend([p1, p2, p3,p4, pas1,pasr, pr], 'FISTA-BT',...
     'FISTA-Mod, $p = \frac{1}{50}, q = \frac{1}{10}$',...
     'FISTA-CD, $d = 2$', 'FISTA-CD, $d = 75$',...
-    'Ada-FISTA, $p=1, q=1$', 'Ada-FISTA+Restart, $p=\frac{1}{2}, q=1$',...
+    'Ada-FISTA, $p=1, q=1$', 'Ada-FISTA+Restart',...
     'Restarting FISTA');
 set(lg,'FontSize', legendFontSize);
 set(lg, 'Interpreter', 'latex');
@@ -212,7 +215,7 @@ set(xlb, 'Units', 'Normalized', 'Position', [1/2, -0.055, 0]);
 lg = legend([p1, p2, p3,p4, pas1,pasr, pr], 'FISTA-BT',...
     'FISTA-Mod, $p = \frac{1}{50}, q = \frac{1}{10}$',...
     'FISTA-CD, $d = 2$', 'FISTA-CD, $d = 75$',...
-    'Ada-FISTA, $p=1, q=1$', 'Ada-FISTA+Restart, $p=\frac{1}{2}, q=1$',...
+    'Ada-FISTA, $p=1, q=1$', 'Ada-FISTA+Restart',...
     'Restarting FISTA');
 set(lg,'FontSize', legendFontSize);
 set(lg, 'Interpreter', 'latex');

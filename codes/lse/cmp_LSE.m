@@ -2,7 +2,7 @@ clear all;
 close all;
 clc;
 %%
-n = 4e1 + 1;
+n = 2e2 + 1;
 
 A = 2*eye(n) - diag(ones(n-1,1), -1) - diag(ones(n-1,1), 1);
 
@@ -19,11 +19,13 @@ para.n = n;
 GradF = @(x) (A')*(A*x - b);
 ObjF = @(x) norm(A*x-b)^2 /2;
 
+x0 = 1e4*randn(n, 1);
+
 outputType = 'png';
 %% Gradient Descent
 fprintf(sprintf('performing GD...\n'));
 
-[x0, ek0, fk0, its0] = func_GD(para, GradF, ObjF);
+[x0, ek0, fk0, its0] = func_GD(x0, para, GradF, ObjF);
 
 fprintf('\n');
 %% compute strong convexity
@@ -39,7 +41,7 @@ fprintf(sprintf('performing Heavy Ball...\n'));
 a_opt = (1-sqrt(1-eta))^2/eta;
 a = a_opt - 1e-8;
 
-[x1, ek1, fk1, its1] = func_Heavyball(a, para, GradF, ObjF);
+[x1, ek1, fk1, its1] = func_Heavyball(x0, a, para, GradF, ObjF);
 
 fprintf('\n');
 %% FISTA, original
@@ -49,7 +51,7 @@ r = 4;
 p = 1;
 q = 1;
 
-[x2, ek2, fk2, its2] = func_FISTA_Mod(p,q,r, para, GradF, ObjF);
+[x2, ek2, fk2, its2] = func_FISTA_Mod(x0, p,q,r, para, GradF, ObjF);
 
 fprintf('\n');
 %% Lazy FISTA-Mod
@@ -59,17 +61,7 @@ r = 4;
 p = 1/12;
 q = 1/2;
 
-[x3, ek3, fk3, its3] = func_FISTA_Mod(p,q,r, para, GradF, ObjF);
-
-fprintf('\n');
-%% Adaptive FISTA
-fprintf(sprintf('performing restarting AdaFISTA...\n'));
-
-r = 4;%*(1 - sqrt(alpha*gamma))^2/(1-alpha*gamma);
-p = 1/1.618;
-q = p^2;
-
-[x4, ek4, fk4, its4] = func_AdaFISTA_sR(p,q,r, para, GradF, ObjF);
+[x3, ek3, fk3, its3] = func_FISTA_Mod(x0, p,q,r, para, GradF, ObjF);
 
 fprintf('\n');
 %% Restarting FISTA
@@ -79,7 +71,21 @@ r = 4;
 p = 1;
 q = p^2;
 
-[x5, ek5, fk5, its5] = func_FISTA_Restart(p,q,r, para, GradF, ObjF);
+[x5, ek5, fk5, its5] = func_FISTA_Restart(x0, p,q,r, para, GradF, ObjF);
+
+fprintf('\n');
+%% Adaptive FISTA
+fprintf(sprintf('performing restarting AdaFISTA...\n'));
+
+r = 4;%*(1 - sqrt(alpha*gamma))^2/(1-alpha*gamma);
+p = 1/1.1;
+q = p^2;
+
+[x4, ek4, fk4, its4] = func_AdaFISTA_sR(x0, p,q,r, para, GradF, ObjF);
+
+fprintf('\n');
+
+[its3, its4, its5]
 
 fprintf('\n');
 %% relative error ||x_{k}-x_{k-1}|| 
@@ -115,7 +121,7 @@ grid on;
 ax = gca;
 ax.GridLineStyle = '--';
 
-axis([1, length(ek2)/10, 1e-10, 1e2]);
+axis([1, length(ek2)/1, 1e-10, 1e2]);
 ytick = [1e-10, 1e-6, 1e-2, 1e2];
 set(gca, 'yTick', ytick);
 
@@ -130,7 +136,7 @@ set(xlb, 'Units', 'Normalized', 'Position', [1/2, -0.075, 0]);
 lg = legend([p0e, p1e, p2e, p3e, p4e, p5e], ...
     'Gradient Descent', 'Optimal Heavyball',...
     'FISTA-BT', 'Lazy FISTA-Mod, $p = \frac{1}{20}, q = \frac{1}{1}$',...
-    'Ada-FISTA+Restart, $p=\frac{1}{1.618}, q=p^2$',...
+    'Ada-FISTA+Restart',...
     'Restarting FISTA');
 set(lg,'FontSize', legendFontSize);
 set(lg, 'Interpreter', 'latex');
@@ -178,8 +184,8 @@ grid on;
 ax = gca;
 ax.GridLineStyle = '--';
 
-axis([1, length(ek2)/10, 1e-14, 1e2]);
-ytick = [1e-14, 1e-10, 1e-6, 1e-2, 1e2];
+axis([1, length(ek2)/1, 1e-14, 1e6]);
+ytick = [1e-14, 1e-10, 1e-6, 1e-2, 1e2, 1e6];
 set(gca, 'yTick', ytick);
 
 ylb = ylabel({'$\Phi(x_{k})-\Phi(x^\star)$'}, 'FontSize', labelFontSize,...
@@ -193,7 +199,7 @@ set(xlb, 'Units', 'Normalized', 'Position', [1/2, -0.075, 0]);
 lg = legend([p0e, p1e, p2e, p3e, p4e, p5e], ...
     'Gradient Descent', 'Optimal Heavyball',...
     'FISTA-BT', 'Lazy FISTA-Mod, $p = \frac{1}{20}, q = \frac{1}{1}$',...
-    'Ada-FISTA+Restart, $p=\frac{1}{1.618}, q=p^2$',...
+    'Ada-FISTA+Restart',...
     'Restarting FISTA');
 set(lg,'FontSize', legendFontSize);
 set(lg, 'Interpreter', 'latex');
@@ -205,6 +211,7 @@ if strcmp(outputType, 'png')
 else
     print(epsname, '-dpdf');
 end
+
 
 
 

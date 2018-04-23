@@ -1,4 +1,4 @@
-function [x, ek, fk, its] = func_Heavyball(a, para, GradF, ObjF)
+function [x, ek, fk, its] = func_Heavyball(x0, a, para, GradF, ObjF)
 
 itsprint(sprintf('      step %09d: norm(ek) = %.3e', 1,1), 1);
 
@@ -12,18 +12,27 @@ maxits = para.maxits;
 ek = zeros(1, maxits);
 fk = zeros(1, maxits);
 
-x0 = zeros(n, 1);
+% x0 = zeros(n, 1);
+% x0 = 1e4*ones(n, 1);
+
+% a = 7/13;
+% a = 0.49;
 
 x = x0;
 y = x0;
+
+plot(x(1), x(2), 'rh', 'markersize', 6);
 
 its = 1;
 while(its<maxits)
     
     x_old = x;
     x = y - gamma*GradF(y);
+    % x = y - gamma*GradF(x);
     
     y = x + a*(x - x_old);
+    
+%     plot(x(1), x(2), 'bh', 'markersize', 6);
     
     %%% stop?
     normE = norm(x-x_old, 'fro');

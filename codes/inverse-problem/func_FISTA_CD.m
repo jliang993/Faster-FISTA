@@ -43,6 +43,8 @@ while(its<maxits)
     a = (t_old-1) /t;
     y = x + a*(x-x_old);
     
+    % d = min(d*1.002^its, 75);
+    
     %%%%%%% stop?
     normE = norm(x_old-x, 'fro');
     

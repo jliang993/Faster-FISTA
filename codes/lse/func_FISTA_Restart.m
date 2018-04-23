@@ -1,4 +1,4 @@
-function [x, ek, fk, its] = func_FISTA_Restart(p,q,r, para, GradF, ObjF)
+function [x, ek, fk, its] = func_FISTA_Restart(x0, p,q,r, para, GradF, ObjF)
 
 itsprint(sprintf('      step %09d: norm(ek) = %.3e', 1,1), 1);
 
@@ -12,7 +12,8 @@ maxits = para.maxits;
 ek = zeros(1, maxits);
 fk = zeros(1, maxits);
 
-x0 = zeros(n, 1);
+% x0 = zeros(n, 1);
+% x0 = 1e4*ones(n, 1);
 
 x = x0;
 y = x0;

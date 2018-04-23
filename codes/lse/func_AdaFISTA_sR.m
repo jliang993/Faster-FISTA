@@ -1,4 +1,4 @@
-function [x, ek, fk, its] = func_AdaFISTA_sR(p,q,r, para, GradF, ObjF)
+function [x, ek, fk, its] = func_AdaFISTA_sR(x0, p,q,r, para, GradF, ObjF)
 
 itsprint(sprintf('      step %09d: norm(ek) = %.3e', 1,1), 1);
 
@@ -12,7 +12,8 @@ maxits = para.maxits;
 ek = zeros(1, maxits);
 fk = zeros(1, maxits);
 
-x0 = zeros(n, 1);
+% x0 = zeros(n, 1);
+% x0 = 1e4*ones(n, 1);
 
 x = x0;
 y = x0;
@@ -39,28 +40,51 @@ while(its<maxits)
     if vk >= 0
         
         if first
-            if its>1e4
-                theta = 0.999999;
-            elseif its>1e3
-                theta = 0.99999;
-            elseif its>5e2
-                theta = 0.9995;
-            elseif its>1e2
-                theta = 0.995;
-            elseif its>50
-                theta = 0.985;
-            else
-                theta = 0.95;
-            end
+%             if its>1e4
+%                 theta = 0.999999;
+%             elseif its>1e3
+%                 theta = 0.99999;
+%             elseif its>5e2
+%                 theta = 0.9995;
+%             elseif its>1e2
+%                 theta = 0.995;
+%             elseif its>50
+%                 theta = 0.985;
+%             else
+%                 theta = 0.95;
+%             end
             kpos = its;
             first = 0;
         end
         
+%         r = r * theta;
+%         if t >= 4*p/(4 - r)
+%             t = 4*p/(4 - r)/1;
+%             y = x;
+%         end
+
+            if its>1e4
+                theta = 0.99999;
+                d = 8;
+            elseif its>1e3
+                theta = 0.9999;
+                d = 4;
+            elseif its>1e2
+                theta = 0.999;
+                d = 2;
+            else
+                theta = 0.99;
+                d = 1;
+            end
+
+        
         r = r * theta;
-        if t >= 4*p/(4 - r)
-            t = 4*p/(4 - r)/1;
+            t = t/d;
             y = x;
-        end
+            
+            % p = 1.618;
+            p = 1.618;
+            q = 1.0;
     end
     
     %%% stop?

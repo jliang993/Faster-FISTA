@@ -65,31 +65,59 @@ while(its<maxits)
     Vk(its) = vk;
     if vk >= 0
         
-        if first
+%         if first
+%             if its>1e4
+%                 theta = 0.999999;
+%             elseif its>1e3
+%                 theta = 0.99999;
+%             elseif its>5e2
+%                 theta = 0.9995;
+%             elseif its>1e2
+%                 theta = 0.995;
+%             elseif its>50
+%                 theta = 0.985;
+%             else
+%                 theta = 0.975;
+%             end
+%             
+%             first = 0;
+%         end
+%         
+%         Wk(cR) = its;
+%         Rk(cR) = r; cR = cR + 1;
+%         r = r * theta;
+%         if t >= 4*p/(4 - r)
+%             t = 4*p/(4 - r)/1;
+%             y = x;
+%         end
+
             if its>1e4
-                theta = 0.999999;
-            elseif its>1e3
                 theta = 0.99999;
-            elseif its>5e2
-                theta = 0.9995;
+                d = 8;
+                p = sqrt(6.0);
+            elseif its>1e3
+                theta = 0.9999;
+                d = 4;
+                p = sqrt(4.5);
             elseif its>1e2
-                theta = 0.995;
-            elseif its>50
-                theta = 0.985;
+                theta = 0.999;
+                d = 2;
+                p = sqrt(3.0);
             else
-                theta = 0.95;
+                theta = 0.99;
+                d = 1;
+                p = sqrt(1.5);
             end
-            
-            first = 0;
-        end
+
         
         Wk(cR) = its;
         Rk(cR) = r; cR = cR + 1;
         r = r * theta;
-        if t >= 4*p/(4 - r)
-            t = 4*p/(4 - r)/1;
+            t = t/d;
             y = x;
-        end
+            
+%             p = 1.414;
+            q = 1.414;
     end
     
     %%%%%%% stop?
