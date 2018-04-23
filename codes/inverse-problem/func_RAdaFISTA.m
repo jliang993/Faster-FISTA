@@ -1,4 +1,4 @@
-function [x, its, ek, phik, r,Rk, Vk,Wk] = func_AdaFISTA_sR(para, GradF,ProxJ, ObjPhi, J, p,q,r)
+function [x, its, ek, phik, r,Rk, Vk,Wk] = func_RAdaFISTA(para, GradF,ProxJ, ObjPhi, J, p,q,r)
 % The Adaptive FISTA
 % For this scheme, the update of r_k is combined with the restarting FISTA stragety
 
