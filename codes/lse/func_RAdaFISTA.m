@@ -1,4 +1,4 @@
-function [x, ek, fk, its] = func_AdaFISTA_sR(x0, p,q,r, para, GradF, ObjF)
+function [x, ek, fk, its] = func_RAdaFISTA(x0, p,q,r, para, GradF, ObjF)
 
 itsprint(sprintf('      step %09d: norm(ek) = %.3e', 1,1), 1);
 

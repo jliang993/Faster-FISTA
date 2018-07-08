@@ -1,4 +1,4 @@
-function [x, ek, fk, its] = func_FISTA_CD(d, para, GradF, ObjF)
+function [x, ek, fk, its] = func_FISTA_CD(x0, d, para, GradF, ObjF)
 
 itsprint(sprintf('      step %09d: norm(ek) = %.3e', 1,1), 1);
 
@@ -12,7 +12,7 @@ maxits = para.maxits;
 ek = zeros(1, maxits);
 fk = zeros(1, maxits);
 
-x0 = zeros(n, 1);
+% x0 = zeros(n, 1);
 
 x = x0;
 y = x0;
@@ -21,6 +21,8 @@ t = 1;
 
 its = 1;
 while(its<maxits)
+    
+    fk(its) = ObjF(x);
     
     x_old = x;
     x = y - gamma*GradF(y);
@@ -39,7 +41,6 @@ while(its<maxits)
     ek(its) = normE;
     if (normE<tol)||(normE>1e10); break; end
     
-    fk(its) = ObjF(x);
     its = its + 1;
     
 end

@@ -37,7 +37,7 @@ while(its<maxits)
     
     %%% update r_k
     vk = (y_old(:)-x(:))'*(x(:)-x_old(:));
-    if vk >= 0; t = 1; end
+    if vk >= 0; t = 1; y = x; end
     
     %%% stop?
     normE = norm(x-x_old, 'fro');

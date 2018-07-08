@@ -1,4 +1,4 @@
-function [xs,xl, its, ek] = func_FISTA_Mod(para, GradF, ProxJ, p,q,r)
+function [xs,xl, its, ek, fk] = func_FISTA_Mod(para, GradF, ProxJ, p,q,r, objF)
 itsprint(sprintf('        step %08d: norm(ek) = %.3e', 1,1), 1);
 
 % parameter initialization
@@ -19,6 +19,7 @@ x0 = zeros(n);
 % max number of iterations
 maxits = 1e5;
 ek = zeros(1, maxits);
+fk = zeros(1, maxits);
 
 its = 1;
 ToL = 1e-14;
@@ -29,6 +30,8 @@ x = x0;
 y = x0;
 
 while(its<maxits)
+    
+    fk(its) = objF(svt(f-x, mu2), x);
     
     x_old = x;
     x = FBS(y, tau);
@@ -53,6 +56,7 @@ end
 fprintf('\n');
 
 ek = ek(1:its-1);
+fk = fk(1:its-1);
 
 xs = x;
 xl = svt(f-xs, mu2);

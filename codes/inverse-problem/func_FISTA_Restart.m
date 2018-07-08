@@ -62,7 +62,7 @@ while(its<maxits)
     %%% gradient criteria
     % v_check = (GradF(y_old))'*(x-x_old);
     v_check = (y_old-x)'*(x-x_old);
-    if v_check > 0; t = 1; end
+    if v_check > 0; t = 1; y = x; end
     
     its = its + 1;
     

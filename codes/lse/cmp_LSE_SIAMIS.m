@@ -2,7 +2,7 @@ clear all;
 close all;
 clc;
 %%
-n = 2e2 + 1;
+n = 1e2 + 1;
 
 A = 2*eye(n) - diag(ones(n-1,1), -1) - diag(ones(n-1,1), 1);
 
@@ -19,13 +19,13 @@ para.n = n;
 GradF = @(x) (A')*(A*x - b);
 ObjF = @(x) norm(A*x-b)^2 /2;
 
-x0 = 1e4*randn(n, 1);
+x_0 = 1e4*randn(n, 1);
 
 outputType = 'pdf';
 %% Gradient Descent
 fprintf(sprintf('performing GD...\n'));
 
-[x0, ek0, fk0, its0] = func_GD(x0, para, GradF, ObjF);
+[x0, ek0, fk0, its0] = func_GD(x_0, para, GradF, ObjF);
 
 fprintf('\n');
 %% compute strong convexity
@@ -41,51 +41,23 @@ fprintf(sprintf('performing Heavy Ball...\n'));
 a_opt = (1-sqrt(1-eta))^2/eta;
 a = a_opt - 1e-8;
 
-[x1, ek1, fk1, its1] = func_Heavyball(x0, a, para, GradF, ObjF);
+[x1, ek1, fk1, its1] = func_Heavyball(x_0, a, para, GradF, ObjF);
 
 fprintf('\n');
 %% FISTA, original
-fprintf(sprintf('performing FISTA...\n'));
+fprintf(sprintf('performing FISTA-CD...\n'));
 
-r = 4;
-p = 1;
-q = 1;
+d = 2;
 
-[x2, ek2, fk2, its2] = func_FISTA_Mod(x0, p,q,r, para, GradF, ObjF);
+[x2, ek2, fk2, its2] = func_FISTA_CD(x_0, d, para, GradF, ObjF);
 
 fprintf('\n');
 %% Lazy FISTA-Mod
 fprintf(sprintf('performing Lazy-FISTA...\n'));
 
-r = 4;
-p = 1/12;
-q = 1/2;
+d = 20;
 
-[x3, ek3, fk3, its3] = func_FISTA_Mod(x0, p,q,r, para, GradF, ObjF);
-
-fprintf('\n');
-%% Restarting FISTA
-fprintf(sprintf('performing restarting FISTA...\n'));
-
-r = 4; 
-p = 1;
-q = p^2;
-
-[x5, ek5, fk5, its5] = func_FISTA_Restart(x0, p,q,r, para, GradF, ObjF);
-
-fprintf('\n');
-%% Adaptive FISTA
-fprintf(sprintf('performing restarting AdaFISTA...\n'));
-
-r = 4;%*(1 - sqrt(alpha*gamma))^2/(1-alpha*gamma);
-p = 1/1.1;
-q = p^2;
-
-[x4, ek4, fk4, its4] = func_RAdaFISTA(x0, p,q,r, para, GradF, ObjF);
-
-fprintf('\n');
-
-[its3, its4, its5]
+[x3, ek3, fk3, its3] = func_FISTA_CD(x_0, d, para, GradF, ObjF);
 
 fprintf('\n');
 %% relative error ||x_{k}-x_{k-1}|| 
@@ -105,15 +77,12 @@ set(0,'DefaultAxesFontSize', axesFontSize);
 set(gcf,'paperunits','centimeters','paperposition',[-0.1 -0.0 output_size/resolution]);
 set(gcf,'papersize',output_size/resolution-[0.85 0.4]);
 
-p0e = semilogy(ek0, 'color',[0.75,0.0,0.0], 'LineWidth',linewidth);
+p0e = semilogy(ek0, 'color',[0.0,0.0,0.0], 'LineWidth',linewidth);
 hold on,
 p1e = semilogy(ek1, 'r', 'LineWidth',linewidth);
 
-p2e = semilogy(ek2, 'color',[0.4,0.4,0.4], 'LineWidth',linewidth);
-p3e = semilogy(ek3, 'b', 'LineWidth',linewidth);
-
-p4e = semilogy(ek4, 'color',[0.99,0.0,0.99], 'LineWidth',linewidth);
-p5e = semilogy(ek5, 'k-.', 'LineWidth',linewidth);
+p2e = semilogy(ek2, 'color',[0.1,0.1,0.99], 'LineWidth',linewidth);
+p3e = semilogy(ek3, 'm', 'LineWidth',linewidth);
 
 uistack(p2e, 'bottom');
 
@@ -133,11 +102,9 @@ xlb = xlabel({'\vspace{-1.0mm}';'$k$'}, 'FontSize', labelFontSize,...
 set(xlb, 'Units', 'Normalized', 'Position', [1/2, -0.075, 0]);
 
 
-lg = legend([p0e, p1e, p2e, p3e, p4e, p5e], ...
-    'Gradient Descent', 'Optimal Heavyball',...
-    'FISTA-BT', 'Lazy FISTA-Mod, $p = \frac{1}{20}, q = \frac{1}{1}$',...
-    'Ada-FISTA+Restart',...
-    'Restarting FISTA');
+lg = legend([p0e, p1e, p2e, p3e], ...
+    'Gradient Descent', 'Optimal method',...
+    'FISTA-CD, $d = 2$', 'FISTA-CD, $d = 20$');
 set(lg,'FontSize', legendFontSize);
 set(lg, 'Interpreter', 'latex');
 legend('boxoff');
@@ -149,7 +116,7 @@ else
     print(epsname, '-dpdf');
 end
 %% plot Phi(x_{k}) - Phi(x*)
-phistar = min([min(fk0), min(fk1), min(fk2), min(fk3), min(fk4)]);
+phistar = min([min(fk0), min(fk1), min(fk2), min(fk3)]);
 linewidth = 1;
 
 axesFontSize = 8;
@@ -166,17 +133,12 @@ set(0,'DefaultAxesFontSize', axesFontSize);
 set(gcf,'paperunits','centimeters','paperposition',[-0.1 -0.0 output_size/resolution]);
 set(gcf,'papersize',output_size/resolution-[0.85 0.4]);
 
-p0e = semilogy(fk0-phistar, 'color',[0.75,0.0,0.0], 'LineWidth',linewidth);
+p0e = semilogy(fk0-phistar, 'color',[0.0,0.0,0.0], 'LineWidth',linewidth);
 hold on,
 p1e = semilogy(fk1-phistar, 'r', 'LineWidth',linewidth);
 
-p2e = semilogy(fk2-phistar, 'color',[0.4,0.4,0.4], 'LineWidth',linewidth);
-p3e = semilogy(fk3-phistar, 'b', 'LineWidth',linewidth);
-
-p4e = semilogy(fk4-phistar, 'color',[0.99,0.0,0.99], 'LineWidth',linewidth);
-p5e = semilogy(fk5-phistar, 'k-.', 'LineWidth',linewidth);
-
-
+p2e = semilogy(fk2-phistar, 'color',[0.1,0.1,0.99], 'LineWidth',linewidth);
+p3e = semilogy(fk3-phistar, 'm', 'LineWidth',linewidth);
 
 uistack(p2e, 'bottom');
 
@@ -196,12 +158,11 @@ xlb = xlabel({'\vspace{-1.0mm}';'$k$'}, 'FontSize', labelFontSize,...
 set(xlb, 'Units', 'Normalized', 'Position', [1/2, -0.075, 0]);
 
 
-lg = legend([p0e, p1e, p2e, p3e, p4e, p5e], ...
-    'Gradient Descent', 'Optimal Heavyball',...
-    'FISTA-BT', 'Lazy FISTA-Mod, $p = \frac{1}{20}, q = \frac{1}{1}$',...
-    'Ada-FISTA+Restart',...
-    'Restarting FISTA');
+lg = legend([p0e, p1e, p2e, p3e], ...
+    'Gradient Descent', 'Optimal method',...
+    'FISTA-CD, $d = 2$', 'FISTA-CD, $d = 20$');
 set(lg,'FontSize', legendFontSize);
+set(lg,'Location', 'SouthEast');
 set(lg, 'Interpreter', 'latex');
 legend('boxoff');
 

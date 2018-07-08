@@ -2,70 +2,66 @@ clear all
 close all
 clc
 %%
-n = [32, 32];
+name = 'cameraman.png';
 
-r = 2; % rank
-xl0 = rand(n(1),r)*diag(r:-1:1)*rand(r,n(2));
-xl0 = xl0/max(abs(xl0(:))) *50;
+u = double(imread(name));
+u = u(1:2:end, 1:2:end);
+[m, n] = size(u);
 
-xs0 = rand(n)*rand(n);
-xs0 = xs0/max(abs(xs0(:))) *50;
+A = proj_mask(u, 0.5, 'p');
 
-ratio = 0.2; % sparsity
-mask = proj_mask(xs0, ratio, 'p');
-xs0 = xs0 .* mask;
+% f0 = imfilter(u, h_, 'circular');
+f0 = A.* u;
 
-f0 = xs0 + xl0;
-sigma = 1e-2*std(f0(:));
+var = 1e0;
+f = f0 + var * randn(m,n);
 
-f = xs0 + xl0 + sigma*randn(n);
-%% parameters
-para.mu1 = 1 /sqrt(max(n)); % weight for the sparse part
-para.mu2 = 2; % weight for the low-rank part
-
-para.beta = 1; % cocoercivity of the gradient
+mu = 8;
 
 para.f = f;
-para.n = n;
+para.mu = mu;
+para.beta = 1;
 
-para.tol = 1e-10; % stopping criterion
-para.maxits = 1e5; % max # of iteration
+para.tol = 1e-7;
+para.maxits = 1e4;
 
-GradF = @(x) - ((f-x) - svt(f-x, para.mu2));
-ProxJ = @(x, t) wthresh(x, 's', t);
-% %
-% [xs, xl, its, ek] = func_tFB_pcp(para, GradF, ProxJ);
+gradF = @(x) A.*( A.*x - f);
+proxJ = @(x, t) perform_prox_tv1D(x, t);
 
-objF = @(l,s) para.mu1*sum(abs(s(:))) + para.mu2*sum(svd(l)) + 1/2*norm(f(:)-s(:)-l(:))^2;
-%% FISTA-Mod
-fprintf(sprintf('performing FISTA-Mod...\n'));
+dxf = @(x) [diff(x,1,2), zeros(m,1)];
+dyf = @(x) [diff(x,1,1); zeros(1,n)];
+
+objF = @(x) mu*( sum(sum( abs(dxf(x)) )) + sum(sum( abs(dyf(x)) )) )...
+    + 1/2*norm(A(:).*x(:) - f(:), 'fro')^2;
+
+% objF = @(x) 1/2*norm(A(:).*x(:) - f(:), 'fro')^2;
+%% FISTA-BT
+fprintf(sprintf('performing FISTA-BT...\n'));
 
 r = 4;
 
-p = 1/1;
-q = 1/1;
+p = 1;
+q = 1;
 
-[xs1,xl1, its1, ek1, fk1] = func_FISTA_Mod(para, GradF, ProxJ, p,q,r, objF);
-
-p = 1/5;
-q = 1/1;
-
-[xs2,xl2, its2, ek2, fk2] = func_FISTA_Mod(para, GradF, ProxJ, p,q,r, objF);
-
+[x1, its1, ek1, fk1, sk1] = func_FISTA_Mod(gradF, proxJ, objF, para, p,q,r);
+fprintf('\n');
+%% FISTA-Mod
+fprintf(sprintf('performing FISTA-Mod...\n'));
 
 p = 1/30;
 q = 1/10;
 
-[xs3,xl3, its3, ek3, fk3] = func_FISTA_Mod(para, GradF, ProxJ, p,q,r, objF);
+[x2, its2, ek2, fk2, sk2] = func_FISTA_Mod(gradF, proxJ, objF, para, p,q,r);
 
 fprintf('\n');
-%% RAd-FISTA
-fprintf(sprintf('performing restarting RAda-FISTA...\n'));
+%% Adaptive + Restarting
+fprintf(sprintf('performing restarting AdaFISTA...\n'));
+
 r = 4;
-p = 1/1.5;
+p = 1/2;
 q = p^2;
 
-[xs_ra,xl_ra, its_ra, ek_ra, fk_ra] = func_RAdaFISTA(para, GradF, ProxJ, p,q,r, objF);
+[x_ra, its_ra, ek_ra, fk_ra] = func_RAdaFISTA(gradF, proxJ, objF, para, p,q,r);
 
 fprintf('\n');
 %% Restarting FISTA
@@ -76,11 +72,11 @@ r = 4;
 p = 1;
 q = 1;
 
-[xsr,xlr, its_r, ek_r, fk_r] = func_FISTA_Restart(para, GradF, ProxJ, p,q,r, objF);
+[x_r, its_r, ek_r, fk_r] = func_FISTA_Restart(gradF, proxJ, objF, para, p,q,r);
 
 fprintf('\n');
-%% plot Phi(\xk)-\Phi(\xsol)
-fsol = min( [min(fk1), min(fk2), min(fk3), min(fk_ra), min(fk_r)] );
+%% plot \Phi(\xk)-\Phi(\xsol)
+fsol = min( [min(fk1), min(fk2), min(fk_ra), min(fk_r)] );
 linewidth = 1;
 
 axesFontSize = 8;
@@ -98,23 +94,22 @@ set(gcf,'paperunits','centimeters','paperposition',[-0.1 -0.17 output_size/resol
 set(gcf,'papersize',output_size/resolution-[0.85 0.5]);
 
 grey1 = [0.3,0.3,0.3];
-p1 = semilogy(fk1 - fsol, 'Color',grey1, 'LineWidth',linewidth);
+p1 = semilogy(fk1-fsol, 'Color',grey1, 'LineWidth',linewidth);
 hold on,
 
-% blue1 = [0.12,0.48,1.0];
-% p2 = semilogy(fk2 - fsol, 'Color',blue1, 'LineWidth',linewidth);
-blue2 = [0.9,0.0,0.0];
-p3 = semilogy(fk3 - fsol, 'Color',blue2, 'LineWidth',linewidth);
+blue1 = [0.12,0.48,1.0];
+p2 = semilogy(fk2-fsol, 'Color',blue1, 'LineWidth',linewidth);
 
-pasr = semilogy(fk_ra - fsol, 'Color',[0.99,0.01,0.99], 'LineWidth',linewidth);
-pr = semilogy(fk_r - fsol, '-.', 'Color',[0.33,0.33,0.33], 'LineWidth',linewidth);
+pasr = semilogy(fk_ra-fsol, 'Color',[0.99,0.01,0.99], 'LineWidth',linewidth);
+
+pr = semilogy(fk_r-fsol, '-.', 'Color',[0.33,0.33,0.33], 'LineWidth',linewidth);
 
 grid on;
 ax = gca;
 ax.GridLineStyle = '--';
 
 % v = axis;
-axis([1 length(ek1)/2 1e-10 1e4]);
+axis([1 length(ek1)/4 1e-10 1e2]);
 ytick = [1e-10, 1e-6, 1e-2, 1e2];
 set(gca, 'yTick', ytick);
 
@@ -125,21 +120,21 @@ xlb = xlabel({'\vspace{-1.0mm}';'$k$'}, 'FontSize', labelFontSize,...
     'FontAngle', 'normal', 'Interpreter', 'latex');
 set(xlb, 'Units', 'Normalized', 'Position', [1/2, -0.055, 0]);
 
-lg = legend([p1, p3, pasr, pr], 'FISTA-BT',...
+lg = legend([p1, p2, pasr, pr], 'FISTA-BT',...
     'FISTA-Mod, $p = \frac{1}{30}, q = \frac{1}{10}$',...
-    'Ada-FISTA+Restart, $p=\frac{1}{1.5}, q=1$',...
+    '$\alpha$-RAda-FISTA',...
     'Restarting FISTA');
 set(lg,'FontSize', legendFontSize);
 set(lg, 'Interpreter', 'latex');
 %
 pos = get(lg, 'Position');
-% set(lg, 'Position', [pos(1)-0.125, pos(2)-0.075, pos(3:4)]);
-% pos_ = get(lg, 'Position');
+set(lg, 'Position', [pos(1)-0.125, pos(2)-0.075, pos(3:4)]);
+pos_ = get(lg, 'Position');
 legend('boxoff');
 
 
-epsname = sprintf('cmp_fista_pcp_mtx_objf.png');
-print(epsname, '-dpng');
+epsname = sprintf('cmp_fista_tvinpaint_objf.pdf');
+print(epsname, '-dpdf');
 %% plot ek
 linewidth = 1;
 
@@ -163,10 +158,9 @@ hold on,
 
 blue1 = [0.12,0.48,1.0];
 p2 = semilogy(ek2, 'Color',blue1, 'LineWidth',linewidth);
-blue2 = [0.9,0.0,0.0];
-p3 = semilogy(ek3, 'Color',blue2, 'LineWidth',linewidth);
 
 pasr = semilogy(ek_ra, 'Color',[0.99,0.01,0.99], 'LineWidth',linewidth);
+
 pr = semilogy(ek_r, '-.', 'Color',[0.33,0.33,0.33], 'LineWidth',linewidth);
 
 grid on;
@@ -174,7 +168,7 @@ ax = gca;
 ax.GridLineStyle = '--';
 
 % v = axis;
-axis([1 length(ek1)/2 1e-10 1e2]);
+axis([1 length(ek1)/4 1e-6 1e2]);
 ytick = [1e-10, 1e-6, 1e-2, 1e2];
 set(gca, 'yTick', ytick);
 
@@ -185,23 +179,24 @@ xlb = xlabel({'\vspace{-1.0mm}';'$k$'}, 'FontSize', labelFontSize,...
     'FontAngle', 'normal', 'Interpreter', 'latex');
 set(xlb, 'Units', 'Normalized', 'Position', [1/2, -0.055, 0]);
 
-lg = legend([p1, p2, p3, pasr, pr], 'FISTA-BT',...
-    'FISTA-Mod, $p = \frac{1}{5}, q = {1}$',...
+lg = legend([p1, p2, pasr, pr], 'FISTA-BT',...
     'FISTA-Mod, $p = \frac{1}{30}, q = \frac{1}{10}$',...
-    'Ada-FISTA+Restart, $p=\frac{1}{1.5}, q=1$',...
+    '$\alpha$-RAda-FISTA',...
     'Restarting FISTA');
 set(lg,'FontSize', legendFontSize);
 set(lg, 'Interpreter', 'latex');
 %
 pos = get(lg, 'Position');
-% set(lg, 'Position', [pos(1)-0.125, pos(2)-0.075, pos(3:4)]);
-% pos_ = get(lg, 'Position');
+set(lg, 'Position', [pos(1)-0.125, pos(2)-0.075, pos(3:4)]);
+pos_ = get(lg, 'Position');
 legend('boxoff');
 
 
-epsname = sprintf('cmp_fista_pcp_mtx_ek.png');
-print(epsname, '-dpng');
+epsname = sprintf('cmp_fista_tvinpaint_ek.pdf');
+print(epsname, '-dpdf');
 %% print images
+% close all;
+% 
 % resolution = 300; % output resolution
 % output_size = 300 *[8, 8]; % output size
 % 
@@ -210,10 +205,10 @@ print(epsname, '-dpng');
 % set(gcf,'paperunits','centimeters','paperposition',[-1.015 -1.01 output_size/resolution]);
 % set(gcf,'papersize',output_size/resolution-[1.74 1.75]);
 % 
-% imgsc(f);
+% imgsc(u);
 % 
-% epsname = sprintf('observation.png');
-% print(epsname, '-dpng');
+% epsname = sprintf('original-img.pdf');
+% print(epsname, '-dpdf');
 % 
 % 
 % figure(102), clf;
@@ -221,17 +216,17 @@ print(epsname, '-dpng');
 % set(gcf,'paperunits','centimeters','paperposition',[-1.015 -1.01 output_size/resolution]);
 % set(gcf,'papersize',output_size/resolution-[1.74 1.75]);
 % 
-% imgsc(xs3);
+% imgsc(f);
 % 
-% epsname = sprintf('sparse-mtx.png');
-% print(epsname, '-dpng');
+% epsname = sprintf('original-miss.pdf');
+% print(epsname, '-dpdf');
 % 
 % figure(103), clf;
 % set(0,'DefaultAxesFontSize', axesFontSize);
 % set(gcf,'paperunits','centimeters','paperposition',[-1.015 -1.01 output_size/resolution]);
 % set(gcf,'papersize',output_size/resolution-[1.74 1.75]);
 % 
-% imgsc(xl3);
+% imgsc(x2);
 % 
-% epsname = sprintf('lowrank-mtx.png');
-% print(epsname, '-dpng');
+% epsname = sprintf('original-inpaint.pdf');
+% print(epsname, '-dpdf');

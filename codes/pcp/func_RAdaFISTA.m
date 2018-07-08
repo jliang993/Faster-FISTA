@@ -1,53 +1,49 @@
-function [x, its, ek] = func_AdaFISTA_sR(f,h, nu, p,q,r)
+function [xs,xl, its, ek, fk] = func_RAdaFISTA(para, GradF, ProxJ, p,q,r, objF)
 itsprint(sprintf('        step %08d: norm(ek) = %.3e', 1,1), 1);
 
-beta = 1; % convolution kernel
-gamma = 1.0*beta;
+% parameter initialization
+beta = para.beta;
+mu1 = para.mu1;
+mu2 = para.mu2;
 
+gamma = 1.0 *beta;
+tau = mu1*gamma;
+n = para.n;
+f = para.f;
 
-tau = nu*gamma;
+% Forward-Backward Step
+FBS = @(x, tau) ProxJ(x-gamma*GradF(x), tau);
 
-[m,n] = size(f);
-F = fft2(f, m,n);
-H = fft2(h, m,n);
-conjH = conj(H);
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-gradF = @(x) ifft2( conjH.*( H.*fft2(x) - F) );
-proxJ = @(x, t) perform_prox_tv1D(x, t);
+x0 = zeros(n);
 
-FBS = @(x, gamma, tau) proxJ(x-gamma*gradF(x), tau);
-
-% Forward difference, dx for j, dy for i
-% dxf = @(x) [diff(x,1,2), zeros(m,1)];
-% dyf = @(x) [diff(x,1,1); zeros(1,n)];
-% Backward difference
-% dxb = @(x) [x(:,1), diff(x,1,2)];
-% dyb = @(x) [x(1,:); diff(x,1,1);];
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-x = f;
-y = f;
-
+% max number of iterations
 maxits = 1e5;
-
 ek = zeros(1, maxits);
+fk = zeros(1, maxits);
 
-ToL = 1e-10;
+its = 1;
+ToL = 1e-14;
 
 t = 1;
 first = 1;
 
-its = 1;
+x = x0;
+y = x0;
+
 while(its<maxits)
+    
+    fk(its) = objF(svt(f-x, mu2), x);
     
     x_old = x;
     y_old = y;
     
-    x = FBS(y, gamma, tau);
+    x = FBS(y, tau);
     
     t_old = t;
     t = (p + sqrt(q+r*t_old^2)) /2;
     a = (t_old-1) /t;
     y = x + a*(x-x_old);
+    
     
     %%% update r_k
     vk = (y_old(:)-x(:))'*(x(:)-x_old(:));
@@ -78,21 +74,22 @@ while(its<maxits)
         end
     end
     
-    %%%%%%% stop?
-    normE = norm(x_old - x, 'fro');
+    %%% stop?
+    normE = norm(x(:)-x_old(:), 'fro');
     if mod(its,1e2)==0
         itsprint(sprintf('        step %08d: norm(ek) = %.3e', its,normE), its);
     end
     
     ek(its) = normE;
-    if (normE<ToL)||(normE>1e10); break; end
+    if ((normE/prod(n))<ToL)||(normE>1e10); break; end
     
     its = its + 1;
     
 end
 fprintf('\n');
 
-its = its - 1;
-ek = ek(1:its);
+ek = ek(1:its-1);
+fk = fk(1:its-1);
 
-% EoF
+xs = x;
+xl = svt(f-xs, mu2);

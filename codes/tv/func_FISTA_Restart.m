@@ -1,19 +1,15 @@
-function [x, its, ek] = func_FISTA_Restart(f,h, nu, p,q,r)
+function [x, its, ek, fk] = func_FISTA_Restart(gradF, proxJ, objF, para, p,q,r)
 itsprint(sprintf('        step %08d: norm(ek) = %.3e', 1,1), 1);
 
-beta = 1; % convolution kernel
+beta = para.beta; % convolution kernel
+mu = para.mu;
 gamma = 1.0*beta;
 
+tau = mu*gamma;
 
-tau = nu*gamma;
+f = para.f;
 
-[m,n] = size(f);
-F = fft2(f, m,n);
-H = fft2(h, m,n);
-conjH = conj(H);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-gradF = @(x) ifft2( conjH.*( H.*fft2(x) - F) );
-proxJ = @(x, t) perform_prox_tv1D(x, t);
 
 FBS = @(x, gamma, tau) proxJ(x-gamma*gradF(x), tau);
 
@@ -23,20 +19,26 @@ FBS = @(x, gamma, tau) proxJ(x-gamma*gradF(x), tau);
 % Backward difference
 % dxb = @(x) [x(:,1), diff(x,1,2)];
 % dyb = @(x) [x(1,:); diff(x,1,1);];
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-x = f;
-y = f;
 
-maxits = 1e5;
+% objF = @(x) mu*( sum(sum(abs(diff(x,1,1)))) + sum(sum(abs(diff(x,1,2)))) )...
+%     + 1/2*norm(ifft2( fft2(x) .* fft2(h,m,n) )-f, 'fro')^2;
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+x = ones(size(f));
+y = x;
+
+tol = para.tol;
+maxits = para.maxits;
 
 ek = zeros(1, maxits);
-
-ToL = 1e-10;
+fk = zeros(1, maxits);
 
 t = 1;
 
 its = 1;
 while(its<maxits)
+    
+    fk(its) = objF(x);
     
     x_old = x;
     y_old = y;
@@ -50,7 +52,7 @@ while(its<maxits)
     
     %%% update r_k
     vk = (y_old(:)-x(:))'*(x(:)-x_old(:));
-    if vk >= 0; t = 1; end
+    if vk >= 0; t = 1; y = x; end
     
     %%%%%%% stop?
     normE = norm(x_old - x, 'fro');
@@ -59,7 +61,7 @@ while(its<maxits)
     end
     
     ek(its) = normE;
-    if (normE<ToL)||(normE>1e10); break; end
+    if (normE<tol)||(normE>1e10); break; end
     
     its = its + 1;
     
@@ -68,5 +70,6 @@ fprintf('\n');
 
 its = its - 1;
 ek = ek(1:its);
+fk = fk(1:its);
 
 % EoF

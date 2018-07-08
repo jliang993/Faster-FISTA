@@ -10,7 +10,7 @@ mu = para.mu;
 n = para.n;
 % f = para.f;
 
-gamma = 1 *beta;
+gamma = 1.0 *beta;
 tau = mu*gamma;
 
 if strcmp(J, 'mc')
@@ -43,7 +43,7 @@ while(its<maxits)
     t_old = t;
     t = (its+d-1) /d;
     a = (t_old-1) /t;
-    y = x + 1*a*(x-y_old);
+    y = x + 1.0*a*(x-y_old);
     
     % d = min(d*1.002^its, 75);
     

@@ -21,8 +21,6 @@ fk = zeros(1, maxits);
 x = x0;
 y = x0;
 
-plot(x(1), x(2), 'rh', 'markersize', 6);
-
 its = 1;
 while(its<maxits)
     
@@ -31,9 +29,7 @@ while(its<maxits)
     % x = y - gamma*GradF(x);
     
     y = x + a*(x - x_old);
-    
-%     plot(x(1), x(2), 'bh', 'markersize', 6);
-    
+        
     %%% stop?
     normE = norm(x-x_old, 'fro');
     if mod(its, 1e4)==0

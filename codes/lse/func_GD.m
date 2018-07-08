@@ -16,11 +16,12 @@ fk = zeros(1, maxits);
 % x0 = 1e4*ones(n, 1);
 
 x = x0;
-plot(x(1), x(2), 'b.', 'markersize', 12);
 
 
 its = 1;
 while(its<maxits)
+    
+    fk(its) = ObjF(x);
     
     x_old = x;
     x = x - gamma*GradF(x);
@@ -38,7 +39,6 @@ while(its<maxits)
     ek(its) = normE;
     if (normE<tol)||(normE>1e10); break; end
     
-    fk(its) = ObjF(x);
     its = its + 1;
     
 end
