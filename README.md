@@ -2,9 +2,10 @@
 
 Matlab code to reproduce the results of the paper
 
-Faster FISTA
+[Faster FISTA](https://arxiv.org/pdf/1807.04005.pdf)
 
-Jingwei Liang, Carola-Bibiane Schönlieb, Preprint 2018
+[Jingwei Liang](https://jliang993.github.io/), [Carola-Bibiane Schönlieb](http://www.damtp.cam.ac.uk/user/cbs31/Home.html)
+
 
 
 ## Quadratic problem
