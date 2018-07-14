@@ -18,8 +18,8 @@ x0 = zeros(n);
 
 % max number of iterations
 maxits = 1e5;
-ek = zeros(1, maxits);
-fk = zeros(1, maxits);
+ek = zeros(maxits, 1);
+fk = zeros(maxits, 1);
 
 its = 1;
 ToL = 1e-14;

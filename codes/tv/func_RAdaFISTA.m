@@ -30,8 +30,8 @@ y = x;
 tol = para.tol /1e2;
 maxits = para.maxits;
 
-ek = zeros(1, maxits);
-fk = zeros(1, maxits);
+ek = zeros(maxits, 1);
+fk = zeros(maxits, 1);
 
 t = 1;
 first = 1;

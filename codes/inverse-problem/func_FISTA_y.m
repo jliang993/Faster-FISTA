@@ -27,8 +27,8 @@ y = x0;
 tol = 1e-10;
 maxits = 1e5;
 
-ek = zeros(1, maxits);
-phik = zeros(1, maxits);
+ek = zeros(maxits, 1);
+phik = zeros(maxits, 1);
 
 t = 1;
 

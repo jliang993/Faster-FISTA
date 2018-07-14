@@ -9,8 +9,8 @@ n = para.n;
 tol = para.tol;
 maxits = para.maxits;
 
-ek = zeros(1, maxits);
-fk = zeros(1, maxits);
+ek = zeros(maxits, 1);
+fk = zeros(maxits, 1);
 
 % x0 = zeros(n, 1);
 % x0 = 1e4*ones(n, 1);

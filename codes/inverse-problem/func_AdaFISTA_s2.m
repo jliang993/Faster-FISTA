@@ -31,9 +31,9 @@ y = x0;
 tol = 1e-10;
 maxits = 1e5;
 
-Ak = zeros(1, maxits);
-Tk = zeros(1, maxits);
-ek = zeros(1, maxits);
+Ak = zeros(maxits, 1);
+Tk = zeros(maxits, 1);
+ek = zeros(maxits, 1);
 
 t = 1;
 

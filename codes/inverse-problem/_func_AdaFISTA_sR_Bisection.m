@@ -32,8 +32,8 @@ y = x0;
 tol = 1e-14;
 maxits = 1e5;
 
-ek = zeros(1, maxits);
-phik = zeros(1, maxits);
+ek = zeros(maxits, 1);
+phik = zeros(maxits, 1);
 
 theta = 0.99;
 

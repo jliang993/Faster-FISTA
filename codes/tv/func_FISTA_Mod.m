@@ -30,9 +30,9 @@ y = x;
 tol = para.tol;
 maxits = para.maxits;
 
-ek = zeros(1, maxits);
-fk = zeros(1, maxits);
-sk = zeros(1, maxits);
+ek = zeros(maxits, 1);
+fk = zeros(maxits, 1);
+sk = zeros(maxits, 1);
 
 
 t = 1;
