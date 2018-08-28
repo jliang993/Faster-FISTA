@@ -4,7 +4,7 @@ clc
 %% problem set up
 J = 'lasso';
 % J = 'glasso';
-% J = 'infty';
+J = 'infty';
 
 [para, gradF,proxJ, objPhi] = problem_setup(J);
 
@@ -60,9 +60,13 @@ fprintf(sprintf('performing restarting FISTA...\n'));
 r = 4;
 
 p = 1;
-q = 1;
+q = 1.0;
 
-[x_r, its_r, ek_r, phik_r] = func_FISTA_Restart(para, gradF, proxJ, objPhi, J, p,q,r);
+t0 = 12; % this is important!!!
+
+[x_r, its_r, ek_r, phik_r] = func_FISTA_Restart(para, gradF, proxJ, objPhi, J, p,q,r, t0);
+
+its_r
 
 fprintf('\n');
 %% Adaptive + Restarting

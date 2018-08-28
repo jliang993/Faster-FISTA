@@ -1,4 +1,4 @@
-function [x, its, ek, phik] = func_FISTA_Restart(para, GradF,ProxJ, ObjPhi, J, p,q,r)
+function [x, its, ek, phik] = func_FISTA_Restart(para, GradF,ProxJ, ObjPhi, J, p,q,r, t0)
 % The MODified FISTA
 itsprint(sprintf('        step %08d: norm(ek) = %.3e', 1,1), 1);
 w = 10;
@@ -30,7 +30,8 @@ maxits = 1e5;
 ek = zeros(maxits, 1);
 phik = zeros(maxits, 1);
 
-t = 1;
+% t0 = 1;
+t = t0;
 
 its = 1;
 while(its<maxits)
@@ -62,7 +63,7 @@ while(its<maxits)
     %%% gradient criteria
     % v_check = (GradF(y_old))'*(x-x_old);
     v_check = (y_old-x)'*(x-x_old);
-    if v_check > 0; t = 1; y = x; end
+    if v_check > 0; t = t0; y = x; end
     
     its = its + 1;
     
