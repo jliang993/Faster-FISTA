@@ -2,10 +2,9 @@
 
 Matlab code to reproduce the results of the paper
 
-[Faster FISTA](https://arxiv.org/pdf/1807.04005.pdf)
+Improving FISTA: Faster, Smarter and Greedier
 
-[Jingwei Liang](https://jliang993.github.io/), [Carola-Bibiane Schönlieb](http://www.damtp.cam.ac.uk/user/cbs31/Home.html)
-
+Jingwei Liang, Carola-Bibiane Schönlieb, 2018
 
 
 ## Quadratic problem
@@ -18,21 +17,21 @@ where $A$ is the Laplacian operator
 $$
 A = 
 \begin{bmatrix}
-2 & -1 & & & & & &  \\
--1 & 2 & -1 & & & & &  \\
- & -1 & 2 & -1 & & & &  \\
- & & & \dotsm \\
- &  & & & -1 & 2 & -1 &  \\
- & &  & & & -1 & 2 & -1  \\
- & & &  & & & -1 & 2  \\
-\end{bmatrix} .
+2 & -1 & & &    \\
+-1 & 2 & -1 & &   \\
+%& -1 & 2 & -1 & &  &  \\
+&  & \dotsm & & \\
+%&  &  & -1 & 2 & -1 &  \\
+& & -1 & 2 & -1  \\
+& & & -1 & 2  \\
+\end{bmatrix}_{n}   .
 $$
 
 We set $n = 201$.
 
- Relative error $\|x_{k}-x_{k-1}\|$          |  Objective function value $\Phi(x_{k}) - \Phi(x^\star)$
+ Error $\|x_{k}-x^\star\|$          |  Objective function $\Phi(x_{k}) - \Phi(x^\star)$
 :-------------------------:|:-------------------------:
-![ ](codes/lse/cmp_lse_ek.png)  |  ![ ](codes/lse/cmp_lse_fk.png)
+![ ](codes/cmp-lse-dk.png)  |  ![ ](codes/cmp-lse-fk.png)
 
 ## Linear inverse problems
 
@@ -42,45 +41,54 @@ $$
 $$
 
 #### $\ell_{1}$-norm
- Relative error $\|x_{k}-x_{k-1}\|$          |  Objective function value $\Phi(x_{k}) - \Phi(x^\star)$
+ Error $\|x_{k}-x^\star\|$          |  Objective function $\Phi(x_{k}) - \Phi(x^\star)$
 :-------------------------:|:-------------------------:
-![ ](codes/inverse-problem/cmp_fista_ek_lasso.png)  |  ![ ](codes/inverse-problem/cmp_fista_phik_lasso.png)
+![ ](codes/cmp-ip-lasso-dk.png)  |  ![ ](codes/cmp-ip-lasso-fk.png)
 
 
 #### $\ell_{1,2}$-norm
- Relative error $\|x_{k}-x_{k-1}\|$          |  Objective function value $\Phi(x_{k}) - \Phi(x^\star)$
+ Error $\|x_{k}-x^\star\|$          |  Objective function $\Phi(x_{k}) - \Phi(x^\star)$
 :-------------------------:|:-------------------------:
-![ ](codes/inverse-problem/cmp_fista_ek_glasso.png)  |  ![ ](codes/inverse-problem/cmp_fista_phik_glasso.png)
+![ ](codes/cmp-ip-glasso-dk.png)  | ![ ](codes/cmp-ip-glasso-fk.png) 
 
 
 #### $\ell_{\infty}$-norm
- Relative error $\|x_{k}-x_{k-1}\|$          |  Objective function value $\Phi(x_{k}) - \Phi(x^\star)$
+ Error $\|x_{k}-x^\star\|$          |  Objective function $\Phi(x_{k}) - \Phi(x^\star)$
 :-------------------------:|:-------------------------:
-![ ](codes/inverse-problem/cmp_fista_ek_infty.png)  |  ![ ](codes/inverse-problem/cmp_fista_phik_infty.png)
+![ ](codes/cmp-ip-infty-dk.png)  |  ![ ](codes/cmp-ip-infty-fk.png)
 
 
-## Total variation based image deblur
+#### Total variation
+ Error $\|x_{k}-x^\star\|$          |  Objective function $\Phi(x_{k}) - \Phi(x^\star)$
+:-------------------------:|:-------------------------:
+![ ](codes/cmp-ip-tv-dk.png)  |  ![ ](codes/cmp-ip-tv-fk.png)
 
-##### The codes only run under MacOS
 
- Original image    |   Blurred image  |   Recovered image          |  Performance comparison
-:-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:
-![ ](codes/tv-deblur/original-img.png)  |  ![ ](codes/tv-deblur/original-blur.png)  |  ![ ](codes/tv-deblur/original-deblur.png)  |  ![ ](codes/tv-deblur/cmp_fista_tvdeblur.png)
+## Sparse logistic regression
+
+Consider the problem
+$$
+\min_{x \in \mathbb{R}^n }  \mu \|x\|_{1} + \frac{1}{m} \sum_{i=1}^m \log({ 1+e^{ -l_{i} h_{i}^T x } })  ,
+$$
+
+ Error $\|x_{k}-x^\star\|$          |  Objective function $\Phi(x_{k}) - \Phi(x^\star)$
+:-------------------------:|:-------------------------:
+![ ](codes/cmp-slr-dk.png)  |  ![ ]()
+
 
 
 ## Principle component pursuit
 
-#### Matrix example
 
- Mixture matrix    |   Sparse component  |   Low-rank component          |  Performance comparison
-:-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:
-![ ](codes/pcp/observation.png)  |  ![ ](codes/pcp/sparse-mtx.png)  |  ![ ](codes/pcp/lowrank-mtx.png)  |  ![ ](codes/pcp/cmp_fista_pcp_mtx.png)
+PCP considers the following problem
+$$
+\min_{x_{l}, x_{s} \in \mathbb{R}^{m\times n}}~ \frac{1}{2}\|f-x_{l}-x_{s}\|^2 + \mu \|x_{s}\|_1 + \nu \|x_{l}\|_*  .
+$$
 
 
-#### Video example
 
  Original frame    |   Foreground  |   Background          |  Performance comparison
 :-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:
-![ ](codes/pcp/original-frame.png)  |  ![ ](codes/pcp/sparse-component.png)  |  ![ ](codes/pcp/lowrank-component.png)  |  ![ ](codes/pcp/cmp_fista_pcp.png)
+![ ](codes/original-frame.png)  |  ![ ](codes/sparse-component.png)  |  ![ ](codes/lowrank-component.png)  |  ![ ](codes/cmp-pcp-dk-video.png)
 
 Copyright (c) 2018 Jingwei Liang
