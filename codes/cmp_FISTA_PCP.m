@@ -183,10 +183,10 @@ set(lg, 'Interpreter', 'latex');
 % set(lg, 'Location', 'best');
 legend('boxoff');
 
-epsname = sprintf('cmp-pcp-dk-%s.pdf', type);
-print(epsname, '-dpdf');
-epsname = sprintf('cmp-pcp-dk-%s.png', type);
-print(epsname, '-dpng');
+filename = ['results', filesep, sprintf('cmp-pcp-dk-%s.pdf', type)];
+print(filename, '-dpdf');
+filename = ['results', filesep, sprintf('cmp-pcp-dk-%s.png', type)];
+print(filename, '-dpng');
 %% print images
 kk = 30;
 
@@ -201,10 +201,10 @@ if strcmp(type, 'video') && 1
     
     imgsc(reshape(f(:,kk), n1,n2));
     
-    epsname = sprintf('original-frame.pdf');
-    print(epsname, '-dpdf');
-    epsname = sprintf('original-frame.png');
-    print(epsname, '-dpng');
+    filename = ['results', filesep, sprintf('original-frame.pdf')];
+    print(filename, '-dpdf');
+    filename = ['results', filesep, sprintf('original-frame.png')];
+    print(filename, '-dpng');
     
     
     figure(102), clf;
@@ -214,10 +214,10 @@ if strcmp(type, 'video') && 1
     
     imgsc(reshape(xs3(:,kk), n1,n2));
     
-    epsname = sprintf('sparse-component.pdf');
-    print(epsname, '-dpdf');
-    epsname = sprintf('sparse-component.png');
-    print(epsname, '-dpng');
+    filename = ['results', filesep, sprintf('sparse-component.pdf')];
+    print(filename, '-dpdf');
+    filename = ['results', filesep, sprintf('sparse-component.png')];
+    print(filename, '-dpng');
     
     figure(103), clf;
     set(0,'DefaultAxesFontSize', axesFontSize);
@@ -226,8 +226,8 @@ if strcmp(type, 'video') && 1
     
     imgsc(reshape(xl3(:,kk), n1,n2));
     
-    epsname = sprintf('lowrank-component.pdf');
-    print(epsname, '-dpdf');
-    epsname = sprintf('lowrank-component.png');
-    print(epsname, '-dpng');
+    filename = ['results', filesep, sprintf('lowrank-component.pdf')];
+    print(filename, '-dpdf');
+    filename = ['results', filesep, sprintf('lowrank-component.png')];
+    print(filename, '-dpng');
 end

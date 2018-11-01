@@ -31,7 +31,7 @@ We set $n = 201$.
 
  Error $\|x_{k}-x^\star\|$          |  Objective function $\Phi(x_{k}) - \Phi(x^\star)$
 :-------------------------:|:-------------------------:
-![ ](codes/cmp-lse-dk.png)  |  ![ ](codes/cmp-lse-fk.png)
+![ ](codes/results/cmp-lse-dk.png)  | ![ ](codes/results/cmp-lse-fk.png) 
 
 ## Linear inverse problems
 
@@ -43,25 +43,25 @@ $$
 #### $\ell_{1}$-norm
  Error $\|x_{k}-x^\star\|$          |  Objective function $\Phi(x_{k}) - \Phi(x^\star)$
 :-------------------------:|:-------------------------:
-![ ](codes/cmp-ip-lasso-dk.png)  |  ![ ](codes/cmp-ip-lasso-fk.png)
+![ ](codes/results/cmp-ip-lasso-dk.png)  | ![ ](codes/results/cmp-ip-lasso-fk.png) 
 
 
 #### $\ell_{1,2}$-norm
  Error $\|x_{k}-x^\star\|$          |  Objective function $\Phi(x_{k}) - \Phi(x^\star)$
 :-------------------------:|:-------------------------:
-![ ](codes/cmp-ip-glasso-dk.png)  | ![ ](codes/cmp-ip-glasso-fk.png) 
+![ ](codes/results/cmp-ip-glasso-dk.png)  | ![ ](codes/results/cmp-ip-glasso-fk.png) 
 
 
 #### $\ell_{\infty}$-norm
  Error $\|x_{k}-x^\star\|$          |  Objective function $\Phi(x_{k}) - \Phi(x^\star)$
 :-------------------------:|:-------------------------:
-![ ](codes/cmp-ip-infty-dk.png)  |  ![ ](codes/cmp-ip-infty-fk.png)
+![ ](codes/results/cmp-ip-infty-dk.png)  | ![ ](codes/results/cmp-ip-infty-fk.png) 
 
 
 #### Total variation
  Error $\|x_{k}-x^\star\|$          |  Objective function $\Phi(x_{k}) - \Phi(x^\star)$
 :-------------------------:|:-------------------------:
-![ ](codes/cmp-ip-tv-dk.png)  |  ![ ](codes/cmp-ip-tv-fk.png)
+![ ](codes/results/cmp-ip-tv-dk.png)  | ![ ](codes/results/cmp-ip-tv-fk.png) 
 
 
 ## Sparse logistic regression
@@ -73,7 +73,7 @@ $$
 
  Error $\|x_{k}-x^\star\|$          |  Objective function $\Phi(x_{k}) - \Phi(x^\star)$
 :-------------------------:|:-------------------------:
-![ ](codes/cmp-slr-dk.png)  |  ![ ]()
+![ ](codes/results/cmp-slr-dk.png)  |  ![ ]()
 
 
 
@@ -89,6 +89,6 @@ $$
 
  Original frame    |   Foreground  |   Background          |  Performance comparison
 :-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:
-![ ](codes/original-frame.png)  |  ![ ](codes/sparse-component.png)  |  ![ ](codes/lowrank-component.png)  |  ![ ](codes/cmp-pcp-dk-video.png)
+![ ](codes/results/original-frame.png)  |  ![ ](codes/results/sparse-component.png)  |  ![ ](codes/results/lowrank-component.png)  | ![ ](codes/results/cmp-pcp-dk-video.png) 
 
 Copyright (c) 2018 Jingwei Liang

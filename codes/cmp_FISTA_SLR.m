@@ -157,7 +157,7 @@ set(lg, 'Interpreter', 'latex');
 % set(lg, 'Location', 'best');
 legend('boxoff');
 
-epsname = sprintf('cmp-slr-dk.pdf');
-print(epsname, '-dpdf');
-epsname = sprintf('cmp-slr-dk.png');
-print(epsname, '-dpng');
+filename = ['results', filesep, sprintf('cmp-slr-dk.pdf')];
+print(filename, '-dpdf');
+filename = ['results', filesep, sprintf('cmp-slr-dk.png')];
+print(filename, '-dpng');

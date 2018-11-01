@@ -180,10 +180,10 @@ set(lg, 'Interpreter', 'latex');
 % set(lg, 'Location', 'southeast');
 legend('boxoff');
 
-epsname = sprintf('cmp-lse-dk.pdf');
-print(epsname, '-dpdf');
-epsname = sprintf('cmp-lse-dk.png');
-print(epsname, '-dpng');
+filename = ['results', filesep, sprintf('cmp-lse-dk.pdf')];
+print(filename, '-dpdf');
+filename = ['results', filesep, sprintf('cmp-lse-dk.png')];
+print(filename, '-dpng');
 %% plot Phi(x_{k}) - Phi(x*)    
 min_f = min([min(fk1), min(fk2), min(fk3), min(fk4), min(fk5), min(fk6)]);
 linewidth = 1;
@@ -249,9 +249,9 @@ set(lg,'FontSize', legendFontSize);
 set(lg, 'Interpreter', 'latex');
 legend('boxoff');
 
-epsname = sprintf('cmp-lse-fk.pdf');
-print(epsname, '-dpdf');
-epsname = sprintf('cmp-lse-fk.png');
-print(epsname, '-dpng');
+filename = ['results', filesep, sprintf('cmp-lse-fk.pdf')];
+print(filename, '-dpdf');
+filename = ['results', filesep, sprintf('cmp-lse-fk.png')];
+print(filename, '-dpng');
 
 

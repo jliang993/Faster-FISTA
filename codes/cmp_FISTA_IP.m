@@ -137,10 +137,10 @@ set(lg, 'Interpreter', 'latex');
 legend('boxoff');
 
 
-epsname = sprintf('cmp-ip-%s-dk.pdf', J);
-print(epsname, '-dpdf');
-epsname = sprintf('cmp-ip-%s-dk.png', J);
-print(epsname, '-dpng');
+filename = ['results', filesep, sprintf('cmp-ip-%s-dk.pdf', J)];
+print(filename, '-dpdf');
+filename = ['results', filesep, sprintf('cmp-ip-%s-dk.png', J)];
+print(filename, '-dpng');
 %% plot Phi(x_{k}) - Phi(x*)    
 min_f = min([min(fk1), min(fk1), min(fk2), min(fk3), min(fk4)]);
 linewidth = 1;
@@ -198,7 +198,7 @@ set(lg,'FontSize', legendFontSize);
 set(lg, 'Interpreter', 'latex');
 legend('boxoff');
 
-epsname = sprintf('cmp-ip-%s-fk.pdf', J);
-print(epsname, '-dpdf');
-epsname = sprintf('cmp-ip-%s-fk.png', J);
-print(epsname, '-dpng');
+filename = ['results', filesep, sprintf('cmp-ip-%s-fk.pdf', J)];
+print(filename, '-dpdf');
+filename = ['results', filesep, sprintf('cmp-ip-%s-fk.png', J)];
+print(filename, '-dpng');
