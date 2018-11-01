@@ -2,9 +2,9 @@
 
 Matlab code to reproduce the results of the paper
 
-Improving FISTA: Faster, Smarter and Greedier
+[Improving FISTA: Faster, Smarter and Greedier](https://jliang993.github.io/resources/journal/faster-fista.pdf)
 
-Jingwei Liang, Carola-Bibiane Schönlieb, 2018
+[Jingwei Liang](https://jliang993.github.io/), [Carola-Bibiane Schönlieb](http://www.damtp.cam.ac.uk/user/cbs31/Home.html), 2018
 
 
 ## Quadratic problem
