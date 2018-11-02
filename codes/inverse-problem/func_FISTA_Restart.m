@@ -43,7 +43,7 @@ while(its<maxits)
     
     t_old = t;
     t = (p + sqrt(q+r*t_old^2)) /2;
-    a = (t_old-1) /t;
+    a = min(1, (t_old-1) /t);
     y = x + a*(x-x_old);
     
     %%%%%%% stop?

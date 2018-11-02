@@ -10,7 +10,7 @@ mu = para.mu;
 n = para.n;
 % f = para.f;
 
-gamma = 1.99 *beta;
+gamma = 1.0 *beta;
 tau = mu*gamma;
 
 if strcmp(J, 'mc')

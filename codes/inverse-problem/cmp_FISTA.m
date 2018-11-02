@@ -5,6 +5,7 @@ clc
 J = 'lasso';
 % J = 'glasso';
 J = 'infty';
+% J = 'tv';
 
 [para, gradF,proxJ, objPhi] = problem_setup(J);
 
@@ -28,8 +29,30 @@ q = 1;
 [x, its, ek, phik] = func_FISTA_Mod(para, gradF, proxJ, objPhi, J, p,q,r);
 
 fprintf('\n');
+
+ck = conv( sign(diff(ek)) , [1; -1] );
+idx = find(ck==2);
+diff(idx(end-10:end)')
+%% Optimal scheme
+fprintf(sprintf('performing FISTA-BT...\n'));
+
+eta = eta_est(ek0, its0-50, its0-10);
+asol = (1 - sqrt(1-eta)) / (1 + sqrt(1-eta));
+
+r = 4*(asol - 0.03);
+
+p = 1.25;
+q = 1.25;
+
+[x_opt, its_opt, ek_opt, phik_opt] = func_FISTA_Mod(para, gradF, proxJ, objPhi, J, p,q,r);
+
+its_opt
+
+fprintf('\n');
 %% FISTA-Mod
 fprintf(sprintf('performing FISTA-Mod...\n'));
+
+r = 4;
 
 p = 1/5;
 q = 1/1;
@@ -59,10 +82,10 @@ fprintf(sprintf('performing restarting FISTA...\n'));
 
 r = 4;
 
-p = 1;
-q = 1.0;
+p = 1/1;
+q = 1;
 
-t0 = 12; % this is important!!!
+t0 = 1; % this is important!!! Bigger than 1 is better!!!
 
 [x_r, its_r, ek_r, phik_r] = func_FISTA_Restart(para, gradF, proxJ, objPhi, J, p,q,r, t0);
 
@@ -228,13 +251,19 @@ p4 = semilogy(phik_c2-phisol, 'Color',red2, 'LineWidth',linewidth);
 orange1 = [0.9020, 0.5412, 0];
 p5 = semilogy(phik_y-phisol, '--', 'Color',orange1, 'LineWidth',linewidth);
 
+
+%%%%%
+orange1 = [0.9020, 0.5412, 0];
+p6 = semilogy(phik_opt-phisol, 'Color',orange1, 'LineWidth',linewidth*2);
+
 grid on;
 ax = gca;
 ax.GridLineStyle = '--';
 
 % v = axis;
-axis([1 length(phik)/1 1e-14 1e4]);
-if strcmp(J, 'infty'); axis([1 length(phik)/1 1e-14 1e2]); end
+% axis([1 length(phik)/1 1e-14 1e4]);
+axis([1 its_opt 1e-14 1e4]);
+% if strcmp(J, 'infty'); axis([1 length(phik)/1 1e-14 1e2]); end
 ytick = [1e-12, 1e-8, 1e-4, 1e0, 1e4];
 set(gca, 'yTick', ytick);
 

@@ -64,7 +64,7 @@ switch J
         n = 1024; % length of signal
         m = 1020; % # of measurements
         
-        % n = 256; m = 252;
+        n = 256; m = 252;
         
         % original x
         xob = randn(n,1);

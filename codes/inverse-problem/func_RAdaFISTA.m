@@ -113,7 +113,7 @@ while(its<maxits)
         Wk(cR) = its;
         Rk(cR) = r; cR = cR + 1;
         r = r * theta;
-            t = t/d;
+            t = t/1.5;
             y = x;
             
 %             p = 1.414;

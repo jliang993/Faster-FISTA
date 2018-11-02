@@ -30,7 +30,7 @@ maxits = 1e5;
 ek = zeros(maxits, 1);
 phik = zeros(maxits, 1);
 
-t = 1;
+t = 4;
 
 its = 1;
 while(its<maxits)
