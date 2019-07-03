@@ -8,6 +8,8 @@ switch J
     case 'lasso'
         k = 64;
         n = 2048; % length of signal
+        k = 8; 
+        n = 128;
         % k = 64; n = 1024;
         m = oversampling*k; % # of measurements
         
@@ -21,6 +23,7 @@ switch J
         ProxJ = @(x, t) wthresh(x, 's', t);
         
         para.mu = 1;
+        para.xob = xob;
         
         FuncJ = @(x) para.mu* sum(abs(x));
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

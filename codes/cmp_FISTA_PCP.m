@@ -2,7 +2,7 @@ clear all
 close all
 clc
 
-addpath toolbox
+addpath data
 set(groot,'defaultLineLineWidth',1.5);
 %%
 type = 'mtx';
