@@ -7,8 +7,8 @@ set(groot,'defaultLineLineWidth',1.5);
 %% problem set up
 J = 'lasso';
 J = 'glasso';
-% J = 'infty';
-% J = 'tv';
+J = 'infty';
+J = 'tv';
 
 [para, gradF,proxJ, objPhi] = problem_FB(J);
 
@@ -97,14 +97,14 @@ set(0,'DefaultAxesFontSize', axesFontSize);
 set(gcf,'paperunits','centimeters','paperposition',[-0.1 -0.0 output_size/resolution]);
 set(gcf,'papersize',output_size/resolution-[0.85 0.4]);
 
-p1d = semilogy(dk1, 'color', hh(46,:), 'LineWidth',linewidth);
+p1d = semilogy(dk1, 'color', [1/1.75,1/1/1.75,1/1/1.75], 'LineWidth',linewidth);
 hold on,
 
-p2d = semilogy(dk2, 'color', hh(31,:), 'LineWidth',linewidth);
+p2d = semilogy(dk2, 'color', [1/6,1/6,1/6], 'LineWidth',linewidth);
 
-p3d = semilogy(dk3, 'color', hh(16,:), 'LineWidth',linewidth);
+p3d = semilogy(dk3, 'color', [1/6,1/1.4,1/6], 'LineWidth',linewidth);
 
-p4d = semilogy(dk4, 'color', hh(1,:), 'LineWidth',linewidth);
+p4d = semilogy(dk4, 'color', [1/6,1/4,1/1.2], 'LineWidth',linewidth);
 
 p5d = semilogy(dk5, 'color', [1,0,0], 'LineWidth',linewidth);
 
@@ -191,7 +191,7 @@ set(xlb, 'Units', 'Normalized', 'Position', [1/2, -0.075, 0]);
 
 lg = legend([p1f, p2f, p3f, p4f, p5f], ...
     'FISTA-BT',...
-    'FISTA-Mod, $p = \frac{1}{20}, q = \frac{1}{2}$',...
+    'Para-FISTA, $p = \frac{1}{20}, q = \frac{1}{2}$',...
     'Restarging FISTA', 'Rada-FISTA', 'Greedy FISTA');
 set(lg,'FontSize', legendFontSize);
 % set(lg, 'Location', 'best');

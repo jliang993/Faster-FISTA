@@ -7,4 +7,4 @@ s = diag( wthresh(diag(s), 's', tau) );
 
 x = u*s*(v');
 
-x = x(:);
+% x = x(:);

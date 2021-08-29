@@ -72,7 +72,7 @@ r = 4;
 [x3, its3, dk3, ek3, fk3] = func_FISTA_Mod(p,q,r, para, proxJ,gradF, objF, xsol);
 
 fprintf('\n');
-%% Lazy-start FISTA-Mod 
+%% Lazy-start Para-FISTA 
 fprintf(sprintf('performing Lazy-FISTA...\n'));
 
 p = 1/20;
@@ -133,17 +133,18 @@ set(0,'DefaultAxesFontSize', axesFontSize);
 set(gcf,'paperunits','centimeters','paperposition',[-0.1 -0.0 output_size/resolution]);
 set(gcf,'papersize',output_size/resolution-[0.85 0.4]);
 
-p1d = semilogy(dk1, 'color', hh(51,:), 'LineWidth',linewidth);
+p1d = semilogy(dk1, 'color', [1,0,0], 'LineWidth',linewidth);
 hold on,
 
-p3d = semilogy(dk3, 'color', hh(41,:), 'LineWidth',linewidth);
+p3d = semilogy(dk3, 'color', [1/1.75,1/1/1.75,1/1/1.75], 'LineWidth',linewidth);
 
-p4d = semilogy(dk4, 'color', hh(31,:), 'LineWidth',linewidth);
+p4d = semilogy(dk4, 'color', [1/6,1/6,1/6], 'LineWidth',linewidth);
 
-p2d = semilogy(dk2, 'color', hh(21,:), 'LineWidth',linewidth);
-p5d = semilogy(dk5, 'color', hh(11,:), 'LineWidth',linewidth);
+p2d = semilogy(dk2, '-.', 'color', [1/6,1/6,1/6], 'LineWidth',linewidth);
 
-p6d = semilogy(dk6, 'color', .8*hh(1,:), 'LineWidth',linewidth);
+p5d = semilogy(dk5, '-.', 'color', [1/1,1/3,1/3], 'LineWidth',linewidth);
+
+p6d = semilogy(dk6, 'color', [1/6,1/3,1/1], 'LineWidth',linewidth);
 
 p7d = semilogy(dk7, 'color', [1,0,0], 'LineWidth',linewidth);
 
@@ -169,11 +170,11 @@ set(xlb, 'Units', 'Normalized', 'Position', [1/2, -0.075, 0]);
 
 % lg = legend([p1d, p3d, p4d, p2d, p5d, p6d, p7d], ...
 %     'Gradient Descent', 'FISTA-BT',...
-%     'FISTA-Mod, $p = \frac{1}{20}, q = \frac{1}{2}$', 'Optimal scheme',...
+%     'Para-FISTA, $p = \frac{1}{20}, q = \frac{1}{2}$', 'Optimal scheme',...
 %     'Restarging FISTA', 'Rada-FISTA', 'Greedy FISTA');
 lg = legend([p3d, p4d, p2d, p5d, p6d, p7d], ...
     'FISTA-BT',...
-    'FISTA-Mod, $p = \frac{1}{20}, q = \frac{1}{2}$', '$\alpha$-FISTA',...
+    'Para-FISTA, $p = \frac{1}{20}, q = \frac{1}{2}$', '$\alpha$-FISTA',...
     'Restarging FISTA', 'Rada-FISTA', 'Greedy FISTA');
 set(lg,'FontSize', legendFontSize);
 set(lg, 'Interpreter', 'latex');
@@ -205,14 +206,14 @@ set(gcf,'papersize',output_size/resolution-[0.85 0.4]);
 p1f = semilogy(fk1-min_f, 'color', hh(51,:), 'LineWidth',linewidth);
 hold on,
 
-p3f = semilogy(fk3-min_f, 'color', hh(41,:), 'LineWidth',linewidth);
+p3f = semilogy(fk3-min_f, 'color', [1/1.75,1/1/1.75,1/1/1.75], 'LineWidth',linewidth);
 
-p4f = semilogy(fk4-min_f, 'color', hh(31,:), 'LineWidth',linewidth);
+p4f = semilogy(fk4-min_f, 'color', [1/6,1/6,1/6], 'LineWidth',linewidth);
 
-p2f = semilogy(fk2-min_f, 'color', hh(21,:), 'LineWidth',linewidth);
-p5f = semilogy(fk5-min_f, 'color', hh(11,:), 'LineWidth',linewidth);
+p2f = semilogy(fk2-min_f, '-.', 'color', [1/6,1/6,1/6], 'LineWidth',linewidth);
+p5f = semilogy(fk5-min_f, '-.', 'color', [1/1,1/3,1/3], 'LineWidth',linewidth);
 
-p6f = semilogy(fk6-min_f, 'color', .8*hh(1,:), 'LineWidth',linewidth);
+p6f = semilogy(fk6-min_f, 'color', [1/6,1/3,1/1], 'LineWidth',linewidth);
 
 p7f = semilogy(fk7-min_f, 'color', [1,0,0], 'LineWidth',linewidth);
 
@@ -238,11 +239,11 @@ set(xlb, 'Units', 'Normalized', 'Position', [1/2, -0.075, 0]);
 
 % lg = legend([p1f, p3f, p4f, p2f, p5f, p6f, p7f], ...
 %     'Gradient Descent', 'FISTA-BT',...
-%     'FISTA-Mod, $p = \frac{1}{20}, q = \frac{1}{2}$', 'Optimal scheme',...
+%     'Para-FISTA, $p = \frac{1}{20}, q = \frac{1}{2}$', 'Optimal scheme',...
 %     'Restarging FISTA', 'Rada-FISTA', 'Greedy FISTA');
 lg = legend([p3f, p4f, p2f, p5f, p6f, p7f], ...
     'FISTA-BT',...
-    'FISTA-Mod, $p = \frac{1}{20}, q = \frac{1}{2}$', '$\alpha$-FISTA',...
+    'Para-FISTA, $p = \frac{1}{20}, q = \frac{1}{2}$', '$\alpha$-FISTA',...
     'Restarging FISTA', 'Rada-FISTA', 'Greedy FISTA');
 set(lg,'FontSize', legendFontSize);
 % set(lg, 'Location', 'southeast');
